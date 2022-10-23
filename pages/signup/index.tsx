@@ -1,9 +1,7 @@
 import { useState, FormEvent } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import Link from "next/link";
 
-export function Signup() {
-  const navigate = useNavigate();
-
+export default function Signup() {
   const [name, setName] = useState('');
   const [cpf, setCpf] = useState('');
   const [email, setEmail] = useState('');
@@ -14,8 +12,6 @@ export function Signup() {
 
     setCpf(cpf.replace(/\./g, "").replace("-", ""));
     console.log(cpf);
-    
-    navigate('/')
   }
 
   return (
@@ -23,7 +19,7 @@ export function Signup() {
       <div className="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl">
         <div className="flex flex-col overflow-y-auto md:flex-row">
           <div className="h-32 md:h-auto md:w-1/2">
-            <img aria-hidden="true" className="object-cover w-full h-full" src="/src/assets/welcome3.jpg" alt="Welcome" />
+            <img aria-hidden="true" className="object-cover w-full h-full" src="/images/welcome3.jpg" alt="Welcome" />
           </div>
           <div className="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
             <div className="w-full">
@@ -31,7 +27,7 @@ export function Signup() {
                 <h1 className="mb-2 text-xl font-semibold text-gray-700">Cadastre-se</h1>
                 <label className="block mt-2 text-md">
                   <span className="text-gray-700">Nome</span>
-                  <input type="text" onChange={event => setName(event.target.value)} className="block w-full pl-1 mt-1 border-2 rounded text-md border-gray-300 focus:border-emerald-300 focus:outline-none" placeholder="Felipe Andrade" />
+                  <input type="text" onChange={event => setName(event.target.value)} className="block w-full pl-1 mt-1 border-2 rounded text-md border-gray-300 focus:border-emerald-300 focus:outline-none" placeholder="Nome Completo" />
                 </label>
                 <label className="block mt-2 text-md">
                   <span className="text-gray-700">CPF</span>
@@ -61,8 +57,9 @@ export function Signup() {
                   Cadastrar
                 </button>
                 <p className="mt-4">
-                  <Link className="text-md font-medium text-emerald-700 hover:underline" to="/login">
-                    Já possui conta? Login
+                  Já possui conta?
+                  <Link href="/">
+                    <a className="text-md font-medium text-emerald-700 ml-1 hover:underline">Login</a>
                   </Link>
                 </p>
               </form>

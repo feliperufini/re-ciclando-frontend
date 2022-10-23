@@ -1,12 +1,12 @@
-import { Link } from "react-router-dom";
+import Link from "next/link";
 
-export function Login() {
+export default function Login() {
   return (
     <div className="flex items-center min-h-screen p-6 bg-gradient-to-r from-emerald-500 to-emerald-300">
       <div className="flex-1 h-full max-w-4xl mx-auto overflow-hidden bg-white rounded-lg shadow-xl">
         <div className="flex flex-col overflow-y-auto md:flex-row">
           <div className="h-32 md:h-auto md:w-1/2">
-            <img aria-hidden="true" className="object-cover w-full h-full" src="/src/assets/welcome1.jpg" alt="Welcome" />
+            <img aria-hidden="true" className="object-cover w-full h-full" src="images/welcome1.jpg" alt="Welcome" />
           </div>
           <div className="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
             <div className="w-full">
@@ -28,8 +28,8 @@ export function Login() {
                 </a>
               </p>
               <p className="mt-1">
-                <Link className="text-md font-medium text-emerald-700 hover:underline" to="/signup">
-                  Cadastrar-se
+                <Link href="/signup">
+                  <a className="text-md font-medium text-emerald-700 hover:underline">Cadastrar-se</a>
                 </Link>
               </p>
             </div>
