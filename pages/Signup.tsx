@@ -1,14 +1,5 @@
-import { gql, useMutation } from "@apollo/client";
 import { useState, FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
-
-const CREATE_USER_MUTATION = gql`
-  mutation createSystemUser($name: String!, $cpf: String!, $email: String!, $password: String!) {
-    createSystemUser(
-      data: {name: $name, cpf: $cpf, email: $email, password: $password, email_validation: false, level: 1, coin: 0, user_status: true}
-    ) { id }
-  }
-`
 
 export function Signup() {
   const navigate = useNavigate();
@@ -18,23 +9,12 @@ export function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const [createSystemUser] = useMutation(CREATE_USER_MUTATION);
-
   async function handleSignup(event: FormEvent) {
     event.preventDefault();
 
     setCpf(cpf.replace(/\./g, "").replace("-", ""));
     console.log(cpf);
-
-    await createSystemUser({
-      variables: {
-        name,
-        cpf,
-        email,
-        password,
-      }
-    })
-
+    
     navigate('/')
   }
 
