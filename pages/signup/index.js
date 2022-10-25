@@ -1,4 +1,4 @@
-import { useState, FormEvent } from "react";
+import { useState } from "react";
 import Link from "next/link";
 
 export default function Signup() {
@@ -7,7 +7,7 @@ export default function Signup() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  async function handleSignup(event: FormEvent) {
+  async function handleSignup(event) {
     event.preventDefault();
 
     setCpf(cpf.replace(/\./g, "").replace("-", ""));
