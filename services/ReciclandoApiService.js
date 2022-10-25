@@ -3,16 +3,10 @@ import axios from 'axios';
 export default class ReciclandoApiService {
     constructor() {
         this.axios = axios.create({
-            baseURL: process.env.NEXT_PUBLIC_API_URL
+            baseURL: process.env.NEXT_PUBLIC_API_URL + '/api'
         });
 
-        this.amountRequests = 0;
         this.axios.interceptors.request.use((config) => {
-            this.amountRequests++;
-            // if (this.amountRequests === 1) {
-            //     LoadingHelper.exibir();
-            // }
-
             const token = localStorage.getItem('token');
             if (token) {
                 config.headers.Authorization = 'Bearer ' + token
@@ -22,11 +16,6 @@ export default class ReciclandoApiService {
         });
 
         this.axios.interceptors.response.use((response) => {
-            this.amountRequests--;
-            // if (this.amountRequests === 0) {
-            //     LoadingHelper.ocultar();
-            // }
-
             return response;
         });
     }
