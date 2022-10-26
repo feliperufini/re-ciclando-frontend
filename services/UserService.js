@@ -2,7 +2,6 @@ import ReciclandoApiService from "./ReciclandoApiService";
 
 export default class UserService extends ReciclandoApiService {
     async login(credentials) {
-        console.log(credentials);
         const { data } = await this.post('/login', credentials);
 
         localStorage.setItem("name", data.name);
@@ -25,12 +24,12 @@ export default class UserService extends ReciclandoApiService {
         localStorage.removeItem("avatar");
     }
 
-    async register(dados) {
-        return this.post('/register', dados);
+    async signup(data) {
+        return this.post('/signup', data);
     }
 
-    async updateProfile(dados) {
-        return this.put(`/user`, dados);
+    async updateProfile(data) {
+        return this.put(`/user`, data);
     }
 
     isAuthenticated() {

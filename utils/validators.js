@@ -1,22 +1,22 @@
-const validationName = (name) => {
+const validateName = (name) => {
     return name?.toString().length > 2;
 }
 
-const validationEmail = (email) => {
+const validateEmail = (email) => {
     return email?.toString().toLowerCase().match(/^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/);
 }
 
-const validationPassword = (password) => {
+const validatePassword = (password) => {
     return password?.toString().length > 5;
 }
 
-const validationConfirmPassword = (password, confirm) => {
-    return validationPassword(password) && password === confirm;
+const validateConfirmPassword = (password, confirm) => {
+    return validatePassword(password) && password === confirm;
 }
 
 export {
-    validationName,
-    validationEmail,
-    validationPassword,
-    validationConfirmPassword
+    validateName,
+    validateEmail,
+    validatePassword,
+    validateConfirmPassword
 }

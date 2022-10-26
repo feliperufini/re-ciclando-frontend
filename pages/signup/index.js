@@ -1,17 +1,55 @@
 import { useState } from "react";
+import { useRouter } from "next/router";
+import { validateName, validateEmail, validatePassword, validateConfirmPassword } from "../../utils/validators";
 import Link from "next/link";
+import UserService from "../../services/UserService";
+
+const userService = new UserService();
 
 export default function Signup() {
   const [name, setName] = useState('');
-  const [cpf, setCpf] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('');
+  const [privacyPolicy, setPrivacyPolicy] = useState(false);
+  const router = useRouter();
 
-  async function handleSignup(event) {
-    event.preventDefault();
+  const validationForm = () => {
+    return (
+      validateName(name)
+      && validateEmail(email)
+      && validatePassword(password)
+      && validateConfirmPassword(password, confirmPassword)
+      && privacyPolicy
+    );
+  }
 
-    setCpf(cpf.replace(/\./g, "").replace("-", ""));
-    console.log(cpf);
+  const onSubmitSignup = async (e) => {
+    e.preventDefault();
+    if (!validationForm()) {
+      alert('Você deve preencher todo o formulário e aceitar os termos para prosseguir!');
+      return;
+    }
+
+    try {
+      const bodySignup = new FormData();
+      bodySignup.append("name", name);
+      bodySignup.append("email", email);
+      bodySignup.append("password", password);
+
+      await userService.signup(bodySignup);
+
+      await userService.login({
+        email: email,
+        password: password
+      });
+      
+      router.push('/');
+    } catch (e) {
+      alert(
+        "Erro ao realizar o cadastro: " + e?.response?.data?.error
+      );
+    }
   }
 
   return (
@@ -23,31 +61,27 @@ export default function Signup() {
           </div>
           <div className="flex items-center justify-center p-6 sm:p-12 md:w-1/2">
             <div className="w-full">
-              <form onSubmit={handleSignup}>
+              <form onSubmit={onSubmitSignup}>
                 <h1 className="mb-2 text-xl font-semibold text-gray-700">Cadastre-se</h1>
                 <label className="block mt-2 text-md">
                   <span className="text-gray-700">Nome</span>
-                  <input type="text" onChange={event => setName(event.target.value)} className="block w-full pl-1 mt-1 border-2 rounded text-md border-gray-300 focus:border-emerald-300 focus:outline-none" placeholder="Nome Completo" />
-                </label>
-                <label className="block mt-2 text-md">
-                  <span className="text-gray-700">CPF</span>
-                  <input type="text" onChange={event => setCpf(event.target.value)} className="block w-full pl-1 mt-1 border-2 rounded text-md border-gray-300 focus:border-emerald-300 focus:outline-none" placeholder="000.000.000-00" />
+                  <input type="text" className={`block w-full pl-1 mt-1 border-2 rounded text-md ${name && !validateName(name) ? 'border-red-400' : 'border-gray-300 focus:border-emerald-300'}  focus:outline-none`} onChange={event => setName(event.target.value)} placeholder="Nome Sobrenome" />
                 </label>
                 <label className="block mt-2 text-md">
                   <span className="text-gray-700">E-mail</span>
-                  <input type="text" onChange={event => setEmail(event.target.value)} className="block w-full pl-1 mt-1 border-2 rounded text-md border-gray-300 focus:border-emerald-300 focus:outline-none" placeholder="email@example.com" />
+                  <input type="text" className={`block w-full pl-1 mt-1 border-2 rounded text-md ${email && !validateEmail(email) ? 'border-red-400' : 'border-gray-300 focus:border-emerald-300'}  focus:outline-none`} onChange={event => setEmail(event.target.value)} placeholder="email@example.com" />
                 </label>
                 <label className="block mt-2 text-md">
                   <span className="text-gray-700">Senha</span>
-                  <input type="password" onChange={event => setPassword(event.target.value)} className="block w-full pl-1 mt-1 border-2 rounded text-md border-gray-300 focus:border-emerald-300 focus:outline-none" placeholder="********" />
+                  <input type="password" className={`block w-full pl-1 mt-1 border-2 rounded text-md ${password && !validatePassword(password) ? 'border-red-400' : 'border-gray-300 focus:border-emerald-300'}  focus:outline-none`} onChange={event => setPassword(event.target.value)} placeholder="********" />
                 </label>
                 <label className="block mt-2 text-md">
                   <span className="text-gray-700">Confirmar Senha</span>
-                  <input type="password" className="block w-full pl-1 mt-1 border-2 rounded text-md border-gray-300 focus:border-emerald-300 focus:outline-none" placeholder="********" />
+                  <input type="password" className={`block w-full pl-1 mt-1 border-2 rounded text-md ${confirmPassword && password != confirmPassword && !validatePassword(confirmPassword) ? 'border-red-400' : 'border-gray-300 focus:border-emerald-300'}  focus:outline-none`} onChange={event => setConfirmPassword(event.target.value)} placeholder="********" />
                 </label>
                 <div className="flex mt-4 text-sm">
                   <label className="flex items-center dark:text-gray-400">
-                    <input type="checkbox" className="text-emerald-600 form-checkbox focus:border-emerald-400 focus:outline-none focus:shadow-outline-emerald dark:focus:shadow-outline-gray" />
+                    <input type="checkbox" className="text-emerald-600 form-checkbox focus:border-emerald-400 focus:outline-none focus:shadow-outline-emerald dark:focus:shadow-outline-gray" onChange={event => setPrivacyPolicy(event.target.checked)} />
                     <span className="ml-2">
                       Li e aceito os <a className="underline" href="/privacy-policy" target="_blank">termos de uso</a>
                     </span>

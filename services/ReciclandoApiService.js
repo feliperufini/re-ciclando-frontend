@@ -3,7 +3,7 @@ import axios from 'axios';
 export default class ReciclandoApiService {
     constructor() {
         this.axios = axios.create({
-            baseURL: process.env.NEXT_PUBLIC_API_URL + '/api'
+            baseURL: process.env.NEXT_PUBLIC_API_URL
         });
 
         this.axios.interceptors.request.use((config) => {
