@@ -18,8 +18,12 @@ export default function Index() {
   }
 
   if (isAuthenticated) {
-    return <Home />;
+    return (
+      <Home />
+    );
   }
 
-  return <Login />;
+  return (
+    <Login />
+  );
 }

@@ -29,7 +29,7 @@ export default class UserService extends ReciclandoApiService {
     }
 
     async updateProfile(data) {
-        return this.put(`/user`, data);
+        return this.put(`/user/update`, data);
     }
 
     isAuthenticated() {
@@ -40,8 +40,8 @@ export default class UserService extends ReciclandoApiService {
         return this.get('/search?filter=' + textSearch);
     }
 
-    async getProfile(idUser) {
-        return this.get(`/search?id=${idUser}`);
+    async getProfile() {
+        return this.get(`/user/update`);
     }
 
     getInfoUserLogged() {
