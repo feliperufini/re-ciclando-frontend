@@ -14,6 +14,7 @@ export default class UserService extends ReciclandoApiService {
         if (user.data.avatar) {
             localStorage.setItem("avatar", user.data.avatar);
         }
+        return res.redirect('/');
     }
 
     async logout() {

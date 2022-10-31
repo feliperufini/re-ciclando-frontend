@@ -7,7 +7,7 @@ export default function MyApp({ Component, pageProps }) {
       <Head>
         <title>Re-Ciclando</title>
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <script type="text/javascript" src="/js/alpine.min.js"></script>
+        {/* <script type="text/javascript" src="/js/alpine.min.js"></script> */}
       </Head>
       <Component {...pageProps} />
     </>

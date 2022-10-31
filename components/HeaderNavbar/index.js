@@ -1,20 +1,16 @@
+import { Alert, Badge, Dropdown } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { TbBellRinging, TbLogout, TbSettings, TbUser } from "react-icons/tb";
+import { TbBellRinging, TbInfoCircle, TbLogout, TbSettings, TbUser } from "react-icons/tb";
 import UserService from '../../services/UserService';
-import Avatar from "../avatar";
+import Avatar from "../Avatar";
 
 const userService = new UserService();
 
 export default function HeaderNavbar() {
   const [userDropdown, setUserDropdown] = useState(false);
-  const [bellDropdown, setBellDropdown] = useState(false);
 
   const handleOpenUserDropdown = () => {
     setUserDropdown(!userDropdown);
-  };
-
-  const handleOpenBellDropdown = () => {
-    setBellDropdown(!bellDropdown);
   };
 
   return (
@@ -37,7 +33,7 @@ export default function HeaderNavbar() {
         </div>
         <ul className="flex items-center flex-shrink-0 space-x-6">
           <li className="relative">
-            <button className="relative align-middle rounded-md focus:outline-none focus:shadow-outline-emerald" aria-label="Notifications" aria-haspopup="true" onClick={handleOpenBellDropdown}>
+            {/* <button className="relative align-middle rounded-md focus:outline-none focus:shadow-outline-emerald" aria-label="Notifications" aria-haspopup="true" onClick={handleOpenBellDropdown}>
               <TbBellRinging className="text-xl mr-2" />
             </button>
             {bellDropdown &&
@@ -51,7 +47,25 @@ export default function HeaderNavbar() {
                   </a>
                 </li>
               </ul>
-            }
+            } */}
+            <Dropdown
+              label={<TbBellRinging className="text-xl mr-2" />}
+              inline={true}
+              arrowIcon={false}
+            >
+              <Dropdown.Item>
+                Mensagem
+              </Dropdown.Item>
+              <Dropdown.Item>
+                Settings
+              </Dropdown.Item>
+              <Dropdown.Item>
+                Earnings
+              </Dropdown.Item>
+              <Dropdown.Item>
+                Sign out
+              </Dropdown.Item>
+            </Dropdown>
           </li>
           <li className="relative">
             <button className="align-middle rounded-full focus:shadow-outline-emerald focus:outline-none" aria-label="Account" aria-haspopup="true" onClick={handleOpenUserDropdown}>

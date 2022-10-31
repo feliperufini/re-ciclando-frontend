@@ -1,6 +1,6 @@
-import DesktopMenu from "../../components/desktop-menu";
-import HeaderNavbar from "../../components/header-navbar";
-import MobileMenu from "../../components/mobile-menu";
+import DesktopMenu from "../../components/DesktopMenu";
+import HeaderNavbar from "../../components/HeaderNavbar";
+import MobileMenu from "../../components/MobileMenu";
 import Welcome from "../welcome";
 
 export default function Home() {
