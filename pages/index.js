@@ -16,7 +16,7 @@ export default function Index() {
   if (isAuthenticated === null) {
     return null;
   }
-
+  
   if (isAuthenticated) {
     return (
       <Home />
@@ -24,6 +24,6 @@ export default function Index() {
   }
 
   return (
-    <Login />
+    <Login afterAuth={() => setIsAuthenticated(true)} />
   );
 }

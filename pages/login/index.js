@@ -5,14 +5,13 @@ import UserService from "../../services/UserService";
 
 const userService = new UserService();
 
-export default function Login() {
+export default function Login({ afterAuth }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
   const validationForm = () => {
     return (
-      validateEmail(email)
-      && validatePassword(password)
+      validateEmail(email) && validatePassword(password)
     );
   }
 
@@ -27,6 +26,9 @@ export default function Login() {
         email: email,
         password: password
       });
+      if (afterAuth) {
+        afterAuth();
+      }
     } catch (e) {
       alert(
         "Erro ao realizar o login: " + e?.response?.data?.error

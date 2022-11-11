@@ -1,18 +1,8 @@
-import { Alert, Badge, Dropdown } from "flowbite-react";
-import { useEffect, useState } from "react";
-import { TbBellRinging, TbInfoCircle, TbLogout, TbSettings, TbUser } from "react-icons/tb";
-import UserService from '../../services/UserService';
-import Avatar from "../Avatar";
-
-const userService = new UserService();
+import { Dropdown } from "flowbite-react";
+import { TbBellRinging, TbLogout, TbSettings, TbUser } from "react-icons/tb";
+import MyAvatar from "../Avatar";
 
 export default function HeaderNavbar() {
-  const [userDropdown, setUserDropdown] = useState(false);
-
-  const handleOpenUserDropdown = () => {
-    setUserDropdown(!userDropdown);
-  };
-
   return (
     <header className="z-10 py-4 bg-emerald-400 shadow-md">
       <div className="container flex items-center justify-between h-full px-6 mx-auto text-emerald-600">
@@ -28,71 +18,78 @@ export default function HeaderNavbar() {
                 <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path>
               </svg>
             </div>
-            <input className="w-full pl-8 pr-2 pt-1 pb-1 text-sm text-gray-700 placeholder-gray-500 bg-gray-100 border-0 rounded-md focus:placeholder-gray-300 focus:outline-none form-input" type="text" placeholder="Procurar produtos..." aria-label="Search" />
+            <input className="w-full pl-8 pr-2 pt-1 pb-1 text-sm form-input text-gray-700 placeholder-gray-500 bg-gray-100 border-0 rounded-md focus:placeholder-gray-300 focus:outline-none focus:ring-red-600;" type="text" placeholder="Procurar produtos..." aria-label="Search" />
           </div>
         </div>
         <ul className="flex items-center flex-shrink-0 space-x-6">
           <li className="relative">
-            {/* <button className="relative align-middle rounded-md focus:outline-none focus:shadow-outline-emerald" aria-label="Notifications" aria-haspopup="true" onClick={handleOpenBellDropdown}>
-              <TbBellRinging className="text-xl mr-2" />
-            </button>
-            {bellDropdown &&
-              <ul className="absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md" aria-label="submenu">
-                <li className="flex">
-                  <a className="inline-flex items-center justify-between w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800" href="#">
-                    <span>Mensagem</span>
-                    <span className="inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-red-600 bg-red-100 rounded-full">
-                      0
-                    </span>
-                  </a>
-                </li>
-              </ul>
-            } */}
             <Dropdown
               label={<TbBellRinging className="text-xl mr-2" />}
               inline={true}
               arrowIcon={false}
+              placement="left-start"
             >
-              <Dropdown.Item>
-                Mensagem
-              </Dropdown.Item>
-              <Dropdown.Item>
-                Settings
-              </Dropdown.Item>
-              <Dropdown.Item>
-                Earnings
-              </Dropdown.Item>
-              <Dropdown.Item>
-                Sign out
-              </Dropdown.Item>
+              <Dropdown.Header>
+                <span className="block text-sm font-medium">
+                  Título 1
+                </span>
+                <span className="block truncate text-sm">
+                  Mensagem 1 Mensagem 1 Mensagem 1
+                </span>
+              </Dropdown.Header>
+              <Dropdown.Header>
+                <span className="block text-sm font-medium">
+                  Título 2
+                </span>
+                <span className="block truncate text-sm">
+                  Mensagem 2
+                </span>
+              </Dropdown.Header>
+              <Dropdown.Header>
+                <span className="block text-sm font-medium">
+                  Título 3
+                </span>
+                <span className="block truncate text-sm">
+                  Mensagem 3 Mensagem 3
+                </span>
+              </Dropdown.Header>
+              <Dropdown.Header>
+                <span className="block text-sm font-medium">
+                  Título 4
+                </span>
+                <span className="block truncate text-sm">
+                  Mensagem 4 Mensagem 4 Mensagem 4
+                </span>
+              </Dropdown.Header>
             </Dropdown>
           </li>
           <li className="relative">
-            <button className="align-middle rounded-full focus:shadow-outline-emerald focus:outline-none" aria-label="Account" aria-haspopup="true" onClick={handleOpenUserDropdown}>
-              <img className="rounded-full w-8" src="/images/avatar.png" />
-            </button>
-            {userDropdown &&
-              <ul className="absolute right-0 w-56 p-2 mt-2 space-y-2 text-gray-600 bg-white border border-gray-100 rounded-md shadow-md" aria-label="submenu">
-                <li className="flex">
-                  <a className="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800" href="#">
-                    <TbUser className="text-lg mr-2" />
-                    <span>Perfil</span>
-                  </a>
-                </li>
-                <li className="flex">
-                  <a className="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800" href="#">
-                    <TbSettings className="text-lg mr-2" />
-                    <span>Configurações</span>
-                  </a>
-                </li>
-                <li className="flex">
-                  <a className="inline-flex items-center w-full px-2 py-1 text-sm font-semibold transition-colors duration-150 rounded-md hover:bg-gray-100 hover:text-gray-800" href="#">
-                    <TbLogout className="text-lg mr-2" />
-                    <span>Sair</span>
-                  </a>
-                </li>
-              </ul>
-            }
+            <Dropdown
+              label={<MyAvatar />}
+              arrowIcon={false}
+              inline={true}
+            >
+              <Dropdown.Header>
+                <span className="block text-sm">
+                  Felipe Andrade
+                </span>
+                <span className="block truncate text-sm font-medium">
+                  feliperufini01@gmail.com
+                </span>
+              </Dropdown.Header>
+              <Dropdown.Item>
+                <TbUser className="text-lg mr-2" />
+                <span>Perfil</span>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <TbSettings className="text-lg mr-2" />
+                <span>Configurações</span>
+              </Dropdown.Item>
+              <Dropdown.Item>
+                <TbLogout className="text-lg mr-2" />
+                <span>Sair</span>
+              </Dropdown.Item>
+            </Dropdown>
           </li >
         </ul >
       </div >

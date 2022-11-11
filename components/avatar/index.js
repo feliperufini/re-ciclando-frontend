@@ -1,6 +1,7 @@
+import { Avatar } from "flowbite-react";
 import avatarImg from '../../public/images/avatar.png';
 
-export default function Avatar({ src }) {
+export default function MyAvatar({ src }) {
     const getAvatar = () => {
         if (src && src !== 'undefined') {
             return src;
@@ -9,9 +10,6 @@ export default function Avatar({ src }) {
     }
 
     return (
-        <img
-            src={getAvatar()}
-            alt='Avatar'
-        />
+        <Avatar alt="Avatar" img={getAvatar()} rounded={true}/>
     );
 }

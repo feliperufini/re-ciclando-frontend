@@ -11,7 +11,7 @@ export default function DesktopMenu() {
   return (
     <aside className="z-20 hidden w-64 overflow-y-auto bg-emerald-500 md:block flex-shrink-0">
       <div className="py-4 text-gray-100">
-        <a className="inline-flex ml-6 mt-0.5 mb-4 text-lg font-bold text-gray-100" href="#">
+        <a className="inline-flex ml-6 mt-1.5 mb-5 text-lg font-bold text-gray-100" href="/">
           <TbRecycle className="text-3xl mr-2" />
           <span>Re-Ciclando</span>
         </a>
@@ -62,20 +62,20 @@ export default function DesktopMenu() {
             </button>
             {open &&
               <ul className="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-600 rounded-md shadow-inner bg-emerald-200" aria-label="submenu">
-                <li className="px-2 py-1 transition-colors duration-150 hover:text-gray-800">
+                <li className="px-2 py-1 transition-colors duration-150 text-emerald-800 hover:text-emerald-900">
                   <a className="w-full" href="./login.html">Login</a>
                 </li>
-                <li className="px-2 py-1 transition-colors duration-150 hover:text-gray-800">
+                <li className="px-2 py-1 transition-colors duration-150 text-emerald-800 hover:text-emerald-900">
                   <a className="w-full" href="./create-account.html">
                     Create account
                   </a>
                 </li>
-                <li className="px-2 py-1 transition-colors duration-150 hover:text-gray-800">
+                <li className="px-2 py-1 transition-colors duration-150 text-emerald-800 hover:text-emerald-900">
                   <a className="w-full" href="./forgot-password.html">
                     Forgot password
                   </a>
                 </li>
-                <li className="px-2 py-1 transition-colors duration-150 hover:text-gray-800">
+                <li className="px-2 py-1 transition-colors duration-150 text-emerald-800 hover:text-emerald-900">
                   <a className="w-full" href="./404.html">404</a>
                 </li>
               </ul>
