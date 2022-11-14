@@ -1,8 +1,40 @@
 import { Dropdown } from "flowbite-react";
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 import { TbBellRinging, TbLogout, TbSettings, TbUser } from "react-icons/tb";
+import ProductService from '../../services/ProductService';
+import ResultSearch from '../ResultSearch';
 import MyAvatar from "../Avatar";
 
+const productService = new ProductService();
+
 export default function HeaderNavbar() {
+  const [resultSearch, setResultSearch] = useState([]);
+  const [textSearch, setTextSearch] = useState('');
+  const router = useRouter();
+
+  const onSearch = async (e) => {
+    setTextSearch(e.target.value);
+    setResultSearch([]);
+
+    if (e.target.value.length < 3) {
+      return;
+    }
+
+    try {
+      const { data } = await productService.search(textSearch);
+      setResultSearch(data);
+    } catch (e) {
+      alert('Erro ao pesquisar produto: ' + e?.response?.data?.error);
+    }
+  }
+
+  const onClickResultSearch = (id) => {
+    setResultSearch([]);
+    setTextSearch('');
+    router.push(`/product/${id}`);
+  }
+
   return (
     <header className="z-10 py-4 bg-emerald-400 shadow-md">
       <div className="container flex items-center justify-between h-full px-6 mx-auto text-emerald-600">
@@ -18,8 +50,23 @@ export default function HeaderNavbar() {
                 <path fillRule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clipRule="evenodd"></path>
               </svg>
             </div>
-            <input className="w-full pl-8 pr-2 pt-1 pb-1 text-sm form-input text-gray-700 placeholder-gray-500 bg-gray-100 border-0 rounded-md focus:placeholder-gray-300 focus:outline-none focus:ring-red-600;" type="text" placeholder="Procurar produtos..." aria-label="Search" />
+            <input className="w-full pl-8 pr-2 pt-1 pb-1 text-sm form-input text-gray-700 placeholder-gray-500 bg-gray-100 border-0 rounded-md focus:placeholder-gray-300 focus:outline-none focus:ring-red-600;" type="text" placeholder="Procurar produtos..." aria-label="Search" value={textSearch} onChange={onSearch} />
           </div>
+          {resultSearch.length > 0 && (
+            <div className="absolute inline-block bg-gray-100 w-1/4 m-auto mt-7 right-0 left-4 shadow-sm">
+              {resultSearch.map(product => (
+                <ResultSearch
+                  photo={product.photo}
+                  name={product.name}
+                  description={product.description}
+                  coast={product.coast}
+                  key={product._id}
+                  id={product._id}
+                  onClick={onClickResultSearch}
+                />
+              ))}
+            </div>
+          )}
         </div>
         <ul className="flex items-center flex-shrink-0 space-x-6">
           <li className="relative">
