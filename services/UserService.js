@@ -17,11 +17,11 @@ export default class UserService extends ReciclandoApiService {
     }
 
     async logout() {
+        localStorage.removeItem("id");
         localStorage.removeItem("name");
         localStorage.removeItem("email");
-        localStorage.removeItem("token");
-        localStorage.removeItem("id");
         localStorage.removeItem("avatar");
+        localStorage.removeItem("token");
     }
 
     async signup(data) {

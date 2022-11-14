@@ -15,45 +15,45 @@ export default function DesktopMenu() {
           <TbRecycle className="text-3xl mr-2" />
           <span>Re-Ciclando</span>
         </a>
-        <ul className="pt-2 border-t-2 border-emerald-100">
-          <li className="relative px-6 py-2">
-            <a className="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-200" href="/">
+        <ul className="border-t-2 cursor-pointer border-emerald-100">
+          <li className="relative px-6 py-2 hover:text-gray-200 hover:bg-[#18bf88] transition-colors duration-150">
+            <a className="inline-flex items-center w-full text-sm font-semibold" href="/">
               <TbHome className="text-xl" />
               <span className="ml-4">Início</span>
             </a>
           </li>
-          <li className="relative px-6 py-2">
-            <a className="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-200" href="/cards">
+          <li className="relative px-6 py-2 hover:text-gray-200 hover:bg-[#18bf88] transition-colors duration-150">
+            <a className="inline-flex items-center w-full text-sm font-semibold" href="/catalog">
               <TbHome className="text-xl" />
               <span className="ml-4">Comprar Produtos</span>
             </a>
           </li>
-          <li className="relative px-6 py-2">
-            <a className="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-200" href="/charts">
+          <li className="relative px-6 py-2 hover:text-gray-200 hover:bg-[#18bf88] transition-colors duration-150">
+            <a className="inline-flex items-center w-full text-sm font-semibold" href="/charts">
               <TbHome className="text-xl" />
               <span className="ml-4">Trocar Materiais</span>
             </a>
           </li>
-          <li className="relative px-6 py-2">
-            <a className="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-200" href="/buttons">
+          <li className="relative px-6 py-2 hover:text-gray-200 hover:bg-[#18bf88] transition-colors duration-150">
+            <a className="inline-flex items-center w-full text-sm font-semibold" href="/buttons">
               <TbHome className="text-xl" />
               <span className="ml-4">Pontos de Troca</span>
             </a>
           </li>
-          <li className="relative px-6 py-2">
-            <a className="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-200" href="/modals">
+          <li className="relative px-6 py-2 hover:text-gray-200 hover:bg-[#18bf88] transition-colors duration-150">
+            <a className="inline-flex items-center w-full text-sm font-semibold" href="/modals">
               <TbHome className="text-xl" />
               <span className="ml-4">Dicas</span>
             </a>
           </li>
-          <li className="relative px-6 py-2">
-            <a className="inline-flex items-center w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-200" href="/tables">
+          <li className="relative px-6 py-2 hover:text-gray-200 hover:bg-[#18bf88] transition-colors duration-150">
+            <a className="inline-flex items-center w-full text-sm font-semibold" href="/tables">
               <TbHome className="text-xl" />
               <span className="ml-4">Sobre</span>
             </a>
           </li>
-          <li className="relative px-6 py-2">
-            <button className="inline-flex items-center justify-between w-full text-sm font-semibold transition-colors duration-150 hover:text-gray-200" aria-haspopup="true" onClick={handleOpenMenuDropdown}>
+          <li className="relative px-6 py-2 hover:text-gray-200 hover:bg-[#18bf88] transition-colors duration-150">
+            <button className="inline-flex items-center justify-between w-full text-sm font-semibold" aria-haspopup="true" onClick={handleOpenMenuDropdown}>
               <span className="inline-flex items-center">
                 <TbHome className="text-xl" />
                 <span className="ml-4">Pages</span>

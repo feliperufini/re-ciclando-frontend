@@ -53,7 +53,7 @@ export default function HeaderNavbar() {
             <input className="w-full pl-8 pr-2 pt-1 pb-1 text-sm form-input text-gray-700 placeholder-gray-500 bg-gray-100 border-0 rounded-md focus:placeholder-gray-300 focus:outline-none focus:ring-red-600;" type="text" placeholder="Procurar produtos..." aria-label="Search" value={textSearch} onChange={onSearch} />
           </div>
           {resultSearch.length > 0 && (
-            <div className="absolute inline-block bg-gray-100 w-1/4 m-auto mt-7 right-0 left-4 shadow-sm">
+            <div className="absolute inline-block bg-gray-100 w-1/4 m-auto mt-7 right-0 left-4 shadow-md rounded-b-md">
               {resultSearch.map(product => (
                 <ResultSearch
                   photo={product.photo}

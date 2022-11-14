@@ -4,7 +4,9 @@ import Login from "./login";
 import UserService from "../services/UserService";
 
 const userService = new UserService();
+
 export default function Index() {
+  console.log('index');
   const [isAuthenticated, setIsAuthenticated] = useState(null);
 
   useEffect(() => {
