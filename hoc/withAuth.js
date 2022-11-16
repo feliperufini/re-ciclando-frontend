@@ -1,22 +1,29 @@
-import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import DesktopMenu from "../components/DesktopMenu";
 import HeaderNavbar from "../components/HeaderNavbar";
-import UserService from "../services/UserService"
-
-const userService = new UserService();
 
 export default function withAuth(Page) {
   return (props) => {
-    const router = useRouter();
+    const [isAuthenticated, setIsAuthenticated] = useState(null);
+    const [userLogged, setUserLogged] = useState(null);
 
-    if (typeof window !== 'undefined') {
-      if (!userService.isAuthenticated()) {
-        router.replace('/');
-        return null;
-      }
+    useEffect(() => {
+      setIsAuthenticated(
+        {
+          id: localStorage.getItem('id'),
+          name: localStorage.getItem('name'),
+          email: localStorage.getItem('email'),
+          avatar: localStorage.getItem('avatar')
+        }
+      );
+      setUserLogged(localStorage.getItem('token') !== null);
+    }, []);
 
-      const userLogged = userService.getInfoUserLogged();
+    if (isAuthenticated === null) {
+      return null;
+    }
 
+    if (isAuthenticated) {
       return (
         <div className="flex h-screen bg-emerald-100">
           <DesktopMenu />
@@ -30,6 +37,8 @@ export default function withAuth(Page) {
       );
     }
 
-    return null;
+    return (
+      <Login afterAuth={() => setIsAuthenticated(true)} />
+    );
   }
 }
