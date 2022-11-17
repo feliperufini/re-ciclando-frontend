@@ -1,44 +1,46 @@
-import { useEffect, useState } from "react";
-import DesktopMenu from "../components/DesktopMenu";
-import HeaderNavbar from "../components/HeaderNavbar";
+import React, { Component } from 'react';
+import Router from 'next/router';
+import UserService from '../services/UserService';
+import DesktopMenu from '../components/DesktopMenu';
+import HeaderNavbar from '../components/HeaderNavbar';
 
-export default function withAuth(Page) {
-  return (props) => {
-    const [isAuthenticated, setIsAuthenticated] = useState(null);
-    const [userLogged, setUserLogged] = useState(null);
+export default function withAuth(AuthComponent) {
+  const userService = new UserService()
+  return class Authenticated extends Component {
 
-    useEffect(() => {
-      setIsAuthenticated(
-        {
-          id: localStorage.getItem('id'),
-          name: localStorage.getItem('name'),
-          email: localStorage.getItem('email'),
-          avatar: localStorage.getItem('avatar')
-        }
-      );
-      setUserLogged(localStorage.getItem('token') !== null);
-    }, []);
+    static async getInitialProps(ctx) {
+      // Ensures material-ui renders the correct css prefixes server-side
+      let userAgent
+      if (typeof window !== 'undefined') {
+        userAgent = navigator.userAgent
+      } else {
+        userAgent = ctx.req.headers['user-agent']
+      }
 
-    if (isAuthenticated === null) {
-      return null;
+      // Check if Page has a `getInitialProps`; if so, call it.
+      const pageProps = AuthComponent.getInitialProps && await AuthComponent.getInitialProps(ctx);
+      // Return props.
+      return { ...pageProps, userAgent }
     }
 
-    if (isAuthenticated) {
+    componentDidMount() {
+      if (!userService.isAuthenticated()) {
+        Router.push('/')
+      }
+    }
+
+    render() {
       return (
-        <div className="flex h-screen bg-emerald-100">
+        <div className="flex h-screen bg-green-100">
           <DesktopMenu />
           <div className="flex flex-col flex-1">
             <HeaderNavbar />
             <main className="h-full pb-8 overflow-y-auto">
-              <Page userLogged={userLogged} {...props} />
+              <AuthComponent {...this.props} auth={userService} />
             </main>
           </div >
         </div >
-      );
+      )
     }
-
-    return (
-      <Login afterAuth={() => setIsAuthenticated(true)} />
-    );
   }
 }

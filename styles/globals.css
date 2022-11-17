@@ -8,6 +8,10 @@
   box-sizing: border-box;
 }
 
+html {
+  height: 100vh;
+}
+
 body {
   @apply bg-zinc-100 text-zinc-900;
   -webkit-font-smoothing: antialiased;
@@ -16,4 +20,8 @@ body {
 body, input, text-area, button {
   font-family: Inter,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji;
   font-size: 1rem;
+}
+
+.h-screen {
+  height: 100vh;
 }
