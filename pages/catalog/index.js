@@ -1,8 +1,32 @@
 import { Table } from "flowbite-react";
+import { useRouter } from "next/router";
+import { useState } from "react";
 import { TbEdit, TbTrash } from "react-icons/tb";
 import withAuth from "../../hoc/withAuth";
+import ProductService from "../../services/ProductService";
+
+const productService = new ProductService();
 
 function Catalog() {
+  const [listProducts, setListProducts] = useState([]);
+  const router = useRouter();
+
+  async () => {
+    setListProducts([]);
+
+    try {
+      const { data } = await productService.getProductsList();
+      setListProducts(data);
+      console.log(listProducts);
+    } catch (e) {
+      alert('Erro carregar produtos: ' + e?.response?.data?.error);
+    }
+  }
+
+  // const onClickListProducts = (id) => {
+  //   router.push(`/product/${id}`);
+  // }
+
   return (
     <div className="p-4">
       <Table>
@@ -20,78 +44,36 @@ function Catalog() {
             Price
           </Table.HeadCell>
           <Table.HeadCell>
-            <span className="sr-only">
-              Edit
-            </span>
+            Actions
           </Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          <Table.Row className="bg-white">
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
-              Apple MacBook Pro 17"
-            </Table.Cell>
-            <Table.Cell>
-              Sliver
-            </Table.Cell>
-            <Table.Cell>
-              Laptop
-            </Table.Cell>
-            <Table.Cell>
-              $2999
-            </Table.Cell>
-            <Table.Cell className="flex">
-              <a href="/tables" className="font-medium text-blue-600">
-                <TbEdit className="text-lg" />
-              </a>
-              <a href="/product/id" className="font-medium text-red-600">
-                <TbTrash className="text-lg"/>
-              </a>
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row className="bg-white">
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              Microsoft Surface Pro
-            </Table.Cell>
-            <Table.Cell>
-              White
-            </Table.Cell>
-            <Table.Cell>
-              Laptop PC
-            </Table.Cell>
-            <Table.Cell>
-              $1999
-            </Table.Cell>
-            <Table.Cell className="flex">
-              <a href="/tables" className="font-medium text-blue-600">
-                <TbEdit className="text-lg" />
-              </a>
-              <a href="/product/id" className="font-medium text-red-600">
-                <TbTrash className="text-lg"/>
-              </a>
-            </Table.Cell>
-          </Table.Row>
-          <Table.Row className="bg-white">
-            <Table.Cell className="whitespace-nowrap font-medium text-gray-900 dark:text-white">
-              Magic Mouse 2
-            </Table.Cell>
-            <Table.Cell>
-              Black
-            </Table.Cell>
-            <Table.Cell>
-              Accessories
-            </Table.Cell>
-            <Table.Cell>
-              $99
-            </Table.Cell>
-            <Table.Cell className="flex">
-              <a href="/tables" className="font-medium text-blue-600">
-                <TbEdit className="text-lg" />
-              </a>
-              <a href="/product/id" className="font-medium text-red-600">
-                <TbTrash className="text-lg"/>
-              </a>
-            </Table.Cell>
-          </Table.Row>
+          {listProducts.length > 0 && (
+            listProducts.map(product => (
+              <Table.Row className="bg-white">
+                <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
+                  {product.name}
+                </Table.Cell>
+                <Table.Cell>
+                  {product.description}
+                </Table.Cell>
+                <Table.Cell>
+                  {product.coast}
+                </Table.Cell>
+                <Table.Cell>
+                  {product.photo}
+                </Table.Cell>
+                <Table.Cell className="flex">
+                  <a href="/tables" className="font-medium text-blue-600">
+                    <TbEdit className="text-lg" />
+                  </a>
+                  <a href="/product/id" className="font-medium text-red-600">
+                    <TbTrash className="text-lg" />
+                  </a>
+                </Table.Cell>
+              </Table.Row>
+            ))
+          )}
         </Table.Body>
       </Table>
     </div>
