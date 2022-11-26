@@ -1,7 +1,8 @@
 import { Table } from "flowbite-react";
 import { useRouter } from "next/router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { TbEdit, TbTrash } from "react-icons/tb";
+import MyPhoto from "../../components/Photo";
 import withAuth from "../../hoc/withAuth";
 import ProductService from "../../services/ProductService";
 
@@ -11,16 +12,17 @@ function Catalog() {
   const [listProducts, setListProducts] = useState([]);
   const router = useRouter();
 
-  async () => {
+  useEffect(() => {
     setListProducts([]);
-
-    try {
+    const getProducts = async () => {
       const { data } = await productService.getProductsList();
       setListProducts(data);
-      console.log(listProducts);
-    } catch (e) {
-      alert('Erro carregar produtos: ' + e?.response?.data?.error);
-    }
+    };
+    getProducts();
+  }, []);
+
+  if (!listProducts.length) {
+    return null;
   }
 
   // const onClickListProducts = (id) => {
@@ -32,25 +34,31 @@ function Catalog() {
       <Table>
         <Table.Head className="bg-emerald-200">
           <Table.HeadCell>
-            Product name
+            Foto
           </Table.HeadCell>
           <Table.HeadCell>
-            Color
+            Nome
           </Table.HeadCell>
           <Table.HeadCell>
-            Category
+            Descrição
           </Table.HeadCell>
           <Table.HeadCell>
-            Price
+            Preço
           </Table.HeadCell>
           <Table.HeadCell>
-            Actions
+            Estoque
+          </Table.HeadCell>
+          <Table.HeadCell>
+            Ações
           </Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
           {listProducts.length > 0 && (
             listProducts.map(product => (
-              <Table.Row className="bg-white">
+              <Table.Row className="bg-white" key={product._id}>
+                <Table.Cell className="float-left">
+                  <MyPhoto src={product.photo}/>
+                </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
                   {product.name}
                 </Table.Cell>
@@ -61,13 +69,13 @@ function Catalog() {
                   {product.coast}
                 </Table.Cell>
                 <Table.Cell>
-                  {product.photo}
+                  {product.inventory}
                 </Table.Cell>
-                <Table.Cell className="flex">
-                  <a href="/tables" className="font-medium text-blue-600">
+                <Table.Cell className="inline-flex -mt-16">
+                  <a href={'/product/edit/'+product._id} className="font-medium text-blue-600">
                     <TbEdit className="text-lg" />
                   </a>
-                  <a href="/product/id" className="font-medium text-red-600">
+                  <a href={'/product/delete/'+product._id} className="font-medium text-red-600">
                     <TbTrash className="text-lg" />
                   </a>
                 </Table.Cell>
