@@ -15,7 +15,7 @@ function Catalog() {
   useEffect(() => {
     setListProducts([]);
     const getProducts = async () => {
-      const { data } = await productService.getProductsList();
+      const { data } = await productService.getProductsListAvailable();
       setListProducts(data);
     };
     getProducts();

@@ -36,10 +36,6 @@ export default class UserService extends ReciclandoApiService {
         return localStorage.getItem('token') !== null;
     }
 
-    async search(textSearch) {
-        return this.get('/search?filter=' + textSearch);
-    }
-
     async getProfile() {
         return this.get(`/user/update`);
     }
