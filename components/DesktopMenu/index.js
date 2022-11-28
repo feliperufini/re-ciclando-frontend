@@ -65,25 +65,25 @@ export default function DesktopMenu() {
                 <li className="px-2 py-1 transition-colors duration-150 text-emerald-800 hover:text-emerald-900">
                   <div className="inline-flex">
                   <TbArrowForward className="text-lg mr-1" />
-                  <a className="w-full" href="/404">Usuários</a>
+                  <a className="w-full" href="/user">Usuários</a>
                   </div>
                 </li>
                 <li className="px-2 py-1 transition-colors duration-150 text-emerald-800 hover:text-emerald-900">
                   <div className="inline-flex">
                   <TbArrowForward className="text-lg mr-1" />
-                  <a className="w-full" href="/login">Produtos</a>
+                  <a className="w-full" href="/product">Produtos</a>
                   </div>
                 </li>
                 <li className="px-2 py-1 transition-colors duration-150 text-emerald-800 hover:text-emerald-900">
                   <div className="inline-flex">
                   <TbArrowForward className="text-lg mr-1" />
-                  <a className="w-full" href="/create-account">Pontos de Troca</a>
+                  <a className="w-full" href="/tradepoint">Pontos de Troca</a>
                   </div>
                 </li>
                 <li className="px-2 py-1 transition-colors duration-150 text-emerald-800 hover:text-emerald-900">
                   <div className="inline-flex">
                   <TbArrowForward className="text-lg mr-1" />
-                  <a className="w-full" href="/forgot-password">Matéria Prima</a>
+                  <a className="w-full" href="/feedstock">Matéria Prima</a>
                   </div>
                 </li>
               </ul>
