@@ -16,7 +16,7 @@ function editProduct() {
     try {
       const { data } = await productService.getProductData(idProduct);
       return data;
-    } catch (error) {
+    } catch (e) {
       alert('Erro ao obter dados do produto!');
     }
   }

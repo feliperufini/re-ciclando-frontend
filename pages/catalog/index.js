@@ -1,8 +1,6 @@
-import { Table } from "flowbite-react";
-import { useRouter } from "next/router";
+import { Button, Card, Modal } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { TbEdit, TbTrash } from "react-icons/tb";
-import MyPhoto from "../../components/Photo";
+import { TbInfoCircle } from "react-icons/tb";
 import withAuth from "../../hoc/withAuth";
 import ProductService from "../../services/ProductService";
 
@@ -10,7 +8,7 @@ const productService = new ProductService();
 
 function Catalog() {
   const [listProducts, setListProducts] = useState([]);
-  const router = useRouter();
+  const [modalIsOpen, setModalIsOpen] = useState(false);
 
   useEffect(() => {
     setListProducts([]);
@@ -21,69 +19,62 @@ function Catalog() {
     getProducts();
   }, []);
 
-  if (!listProducts.length) {
-    return null;
+  function handleOpenModal() {
+    setModalIsOpen(true);
   }
 
-  // const onClickListProducts = (id) => {
-  //   router.push(`/product/${id}`);
-  // }
+  function handleCloseModal() {
+    setModalIsOpen(false);
+  }
+
+  function confirmBuy() {
+    handleCloseModal();
+    const idUser = localStorage.getItem('id');
+    console.log(idUser);
+  }
 
   return (
-    <div className="p-4">
-      <Table>
-        <Table.Head className="bg-emerald-200">
-          <Table.HeadCell>
-            Foto
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Nome
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Descrição
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Preço
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Estoque
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Ações
-          </Table.HeadCell>
-        </Table.Head>
-        <Table.Body className="divide-y">
-          {listProducts.length > 0 && (
-            listProducts.map(product => (
-              <Table.Row className="bg-white" key={product._id}>
-                <Table.Cell className="float-left">
-                  <MyPhoto src={product.photo}/>
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
-                  {product.name}
-                </Table.Cell>
-                <Table.Cell>
-                  {product.description}
-                </Table.Cell>
-                <Table.Cell>
-                  {product.coast}
-                </Table.Cell>
-                <Table.Cell>
-                  {product.inventory}
-                </Table.Cell>
-                <Table.Cell className="inline-flex -mt-16">
-                  <a href={'/product/edit/'+product._id} className="font-medium text-blue-600">
-                    <TbEdit className="text-lg" />
-                  </a>
-                  <a href={'/product/delete/'+product._id} className="font-medium text-red-600">
-                    <TbTrash className="text-lg" />
-                  </a>
-                </Table.Cell>
-              </Table.Row>
-            ))
-          )}
-        </Table.Body>
-      </Table>
+    <div className="p-4 grid grid-cols-6">
+      {listProducts.length > 0 && (
+        listProducts.map(product => (
+          <div className="max-w-sm p-1" key={product._id}>
+            <Card imgAlt="Imagem do Produto" imgSrc={product.photo}>
+              <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
+                {product.name}
+              </h5>
+              <p>
+                {product.description}
+              </p>
+              <div className="flex items-center justify-between">
+                <span className="text-3xl font-bold text-gray-900 dark:text-white">
+                  ${product.coast}
+                </span>
+                <a data-toggle="modal" data-target="#buyModal" onClick={handleOpenModal} className="cursor-pointer rounded-lg bg-emerald-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-emerald-800 focus:outline-none focus:ring-4 focus:ring-emerald-300 dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800">
+                  Comprar
+                </a>
+              </div>
+            </Card>
+          </div>
+        ))
+      )}
+      <Modal show={modalIsOpen} size="md">
+        <Modal.Body>
+          <div className="text-center">
+            <TbInfoCircle className="mx-auto mb-2 h-14 w-14 text-gray-400 dark:text-gray-200" />
+            <h3 className="mb-4 text-lg font-normal text-gray-500 dark:text-gray-400">
+              Deseja realmente comprar este item?
+            </h3>
+            <div className="flex justify-center gap-4">
+              <Button color="gray" onClick={confirmBuy}>
+                Sim
+              </Button>
+              <Button color="failure" onClick={handleCloseModal}>
+                Não
+              </Button>
+            </div>
+          </div>
+        </Modal.Body>
+      </Modal>
     </div>
   );
 }
