@@ -5,7 +5,7 @@ function Home() {
     <div className="container p-4 mx-auto grid ">
       <span className="px-2 py-1 w-auto font-semibold leading-tight flex justify-self-end justify-end border border-yellow-400 text-yellow-600 bg-yellow-100 rounded-full">
         <p className="pl-1">99999999</p>
-        <img aria-hidden="true" className="ml-1 object-cover justify-self-center" src="images/coin.png" alt="Plant" width={24} />
+        <img aria-hidden="true" className="ml-1 object-cover justify-self-center" src="images/coin.png" alt="Coin" width={24} />
       </span>
       <h2 className="text-2xl font-semibold text-center text-emerald-800">
         Começe a reciclar hoje!

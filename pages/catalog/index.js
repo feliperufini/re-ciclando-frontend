@@ -9,6 +9,7 @@ const productService = new ProductService();
 function Catalog() {
   const [listProducts, setListProducts] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
+  const [itemOpenId, setItemOpenId] = useState('');
 
   useEffect(() => {
     setListProducts([]);
@@ -19,18 +20,28 @@ function Catalog() {
     getProducts();
   }, []);
 
-  function handleOpenModal() {
+  function handleOpenModal(productId) {
     setModalIsOpen(true);
+    setItemOpenId(productId);
   }
 
   function handleCloseModal() {
     setModalIsOpen(false);
+    setItemOpenId('');
   }
 
   function confirmBuy() {
     handleCloseModal();
-    const idUser = localStorage.getItem('id');
-    console.log(idUser);
+    const userId = localStorage.getItem('id');
+
+    useEffect(() => {
+      const getProducts = async () => {
+        const { data } = await productService.getProductsListAvailable();
+        setListProducts(data);
+      };
+      getProducts();
+    }, []);
+    console.log(userId, itemOpenId);
   }
 
   return (
@@ -45,11 +56,12 @@ function Catalog() {
               <p>
                 {product.description}
               </p>
-              <div className="flex items-center justify-between">
-                <span className="text-3xl font-bold text-gray-900 dark:text-white">
-                  ${product.coast}
+              <div className="flex items-center justify-between -mx-3">
+                <img aria-hidden="true" className="mr-1 object-cover justify-self-center" src="images/coin.png" alt="Coin" width={24} />
+                <span className="text-xl mr-auto font-bold text-gray-900 dark:text-white">
+                  {product.coast}
                 </span>
-                <a data-toggle="modal" data-target="#buyModal" onClick={handleOpenModal} className="cursor-pointer rounded-lg bg-emerald-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-emerald-800 focus:outline-none focus:ring-4 focus:ring-emerald-300 dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800">
+                <a onClick={() => handleOpenModal(product._id)} className="cursor-pointer rounded-lg px-3 py-2 text-center text-sm font-medium bg-emerald-700 text-white hover:bg-emerald-800 focus:outline-none focus:ring-4 focus:ring-emerald-300 dark:bg-emerald-600 dark:hover:bg-emerald-700 dark:focus:ring-emerald-800">
                   Comprar
                 </a>
               </div>

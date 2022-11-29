@@ -11,7 +11,7 @@ export default function ResultSearch({ name, description, coast, photo, onClick,
       <div className="m-auto mr-2">
         <span className="inline-flex ml-2">
           {coast}
-          <img aria-hidden="true" className="ml-1 object-cover justify-self-center" src="images/coin.png" alt="Plant" width={24} />
+          <img aria-hidden="true" className="ml-1 object-cover justify-self-center" src="images/coin.png" alt="Coin" width={24} />
         </span>
       </div>
     </div>
