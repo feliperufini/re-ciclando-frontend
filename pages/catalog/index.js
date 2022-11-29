@@ -1,15 +1,19 @@
 import { Button, Card, Modal } from "flowbite-react";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { TbInfoCircle } from "react-icons/tb";
 import withAuth from "../../hoc/withAuth";
 import ProductService from "../../services/ProductService";
+import UserService from "../../services/UserService";
 
 const productService = new ProductService();
+const userService = new UserService();
 
 function Catalog() {
   const [listProducts, setListProducts] = useState([]);
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [itemOpenId, setItemOpenId] = useState('');
+  const router = useRouter();
 
   useEffect(() => {
     setListProducts([]);
@@ -30,18 +34,39 @@ function Catalog() {
     setItemOpenId('');
   }
 
-  function confirmBuy() {
-    handleCloseModal();
+  const confirmBuy = async () => {
+    setModalIsOpen(false);
+    try {
+      await productService.postProductBuy({
+        userId: localStorage.getItem('id'),
+        productId: itemOpenId
+      });
+      const product = await productService.getProductData(itemOpenId);
+      const user = await userService.getProfile(localStorage.getItem('id'));
+      await userService.setUserLocalStorage({coin: user.data.coin - product.data.coast});
+
+      setItemOpenId('');
+      router.push('/catalog');
+    } catch (error) {
+      alert(`Erro ao realizar compra!`);
+    }
+  }
+
+  const confirmBuy2 = () => {
     const userId = localStorage.getItem('id');
+    const bodyBuy = {
+      userId: userId,
+      productId: itemOpenId
+    };
 
     useEffect(() => {
-      const getProducts = async () => {
-        const { data } = await productService.getProductsListAvailable();
-        setListProducts(data);
+      const postBuy = async () => {
+        await productService.postProductBuy(bodyBuy);
       };
-      getProducts();
+      postBuy();
     }, []);
-    console.log(userId, itemOpenId);
+
+    handleCloseModal();
   }
 
   return (

@@ -1,6 +1,6 @@
 import { Dropdown } from "flowbite-react";
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { TbBellRinging, TbLogout, TbSettings, TbUser } from "react-icons/tb";
 import ProductService from '../../services/ProductService';
 import ResultSearch from '../ResultSearch';
@@ -11,7 +11,14 @@ const productService = new ProductService();
 export default function HeaderNavbar() {
   const [resultSearch, setResultSearch] = useState([]);
   const [textSearch, setTextSearch] = useState('');
+  const [userName, setUserName] = useState('');
+  const [userEmail, setUserEmail] = useState('');
   const router = useRouter();
+  
+  useEffect(() => {
+    setUserName(localStorage.getItem('name'));
+    setUserEmail(localStorage.getItem('email'));
+  }, [])
 
   const onSearch = async (e) => {
     setTextSearch(e.target.value);
@@ -118,10 +125,10 @@ export default function HeaderNavbar() {
             >
               <Dropdown.Header>
                 <span className="block text-sm">
-                  Felipe Andrade
+                  {userName}
                 </span>
                 <span className="block truncate text-sm font-medium">
-                  feliperufini01@gmail.com
+                  {userEmail}
                 </span>
               </Dropdown.Header>
               <Dropdown.Item>
