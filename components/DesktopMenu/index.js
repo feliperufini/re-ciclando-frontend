@@ -29,25 +29,25 @@ export default function DesktopMenu() {
             </a>
           </li>
           <li className="relative px-6 py-2 hover:text-gray-200 hover:bg-[#18bf88] transition-colors duration-150">
-            <a className="inline-flex items-center w-full text-sm font-semibold" href="/charts">
+            <a className="inline-flex items-center w-full text-sm font-semibold" href="/trade">
               <TbArrowsRightLeft className="text-xl" />
               <span className="ml-4">Trocar Materiais</span>
             </a>
           </li>
           <li className="relative px-6 py-2 hover:text-gray-200 hover:bg-[#18bf88] transition-colors duration-150">
-            <a className="inline-flex items-center w-full text-sm font-semibold" href="/buttons">
+            <a className="inline-flex items-center w-full text-sm font-semibold" href="/tradepoint">
               <TbBuildingStore className="text-xl" />
               <span className="ml-4">Pontos de Troca</span>
             </a>
           </li>
           <li className="relative px-6 py-2 hover:text-gray-200 hover:bg-[#18bf88] transition-colors duration-150">
-            <a className="inline-flex items-center w-full text-sm font-semibold" href="/modals">
+            <a className="inline-flex items-center w-full text-sm font-semibold" href="/tip">
               <TbBulb className="text-xl" />
               <span className="ml-4">Dicas</span>
             </a>
           </li>
           <li className="relative px-6 py-2 hover:text-gray-200 hover:bg-[#18bf88] transition-colors duration-150">
-            <a className="inline-flex items-center w-full text-sm font-semibold" href="/tables">
+            <a className="inline-flex items-center w-full text-sm font-semibold" href="/about">
               <TbInfoCircle className="text-xl" />
               <span className="ml-4">Sobre</span>
             </a>
