@@ -8,9 +8,12 @@ const tradepointService = new TradepointService();
 function Home() {
   const [tradepointList, setTradepointList] = useState([]);
 
-  useEffect(async () => {
-    const tradepoints = await getTradepointList();
-    setTradepointList(tradepoints);
+  useEffect(() => {
+    const getTradepoints = async () => {
+      const { data } = await tradepointService.getTradepointsList();
+      setTradepointList(data);
+    };
+    getTradepoints();
   }, []);
 
   return (
@@ -23,7 +26,7 @@ function Home() {
                 {tradepoint.title}
               </h5>
               <p>
-                {tradepoint.description}
+                {tradepoint.address}
               </p>
             </Card>
           </div>

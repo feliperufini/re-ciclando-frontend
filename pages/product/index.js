@@ -1,5 +1,4 @@
 import { Table } from "flowbite-react";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { TbEdit, TbTrash } from "react-icons/tb";
 import MyPhoto from "../../components/Photo";
@@ -10,7 +9,6 @@ const productService = new ProductService();
 
 function Catalog() {
   const [listProducts, setListProducts] = useState([]);
-  const router = useRouter();
 
   useEffect(() => {
     setListProducts([]);
