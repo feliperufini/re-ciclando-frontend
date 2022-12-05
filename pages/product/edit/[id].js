@@ -1,4 +1,4 @@
-import { Table } from "flowbite-react";
+import { Button, FileInput, Label, Table, Textarea, TextInput } from "flowbite-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { TbEdit, TbTrash } from "react-icons/tb";
@@ -21,74 +21,73 @@ function editProduct() {
     }
   }
 
-  useEffect(async () => {
-    if (!router.query.id) {
-      return;
+  // useEffect(() => {
+  //   async function fetchData() {
+  //     if (!router.query.id) {
+  //       return;
+  //     }
+
+  //     const productData = await getProductData(router.query.id);
+  //     setProduct(productData);
+  //     console.log(product);
+  //   }
+  //   fetchData();
+  // }, [router.query.id]);
+
+  useEffect(() => {
+    return async () => {
+      if (!router.query.id) {
+        return;
+      }
+
+      const productData = await getProductData(router.query.id);
+      setProduct(productData);
     }
-
-    const productData = await getProductData(router.query.id);
-    setProduct(productData);
   }, [router.query.id]);
-
-  if (!listProducts.length) {
-    return null;
-  }
 
   return (
     <div className="p-4">
-      <Table>
-        <Table.Head className="bg-emerald-200">
-          <Table.HeadCell>
-            Foto
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Nome
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Descrição
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Preço
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Estoque
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Ações
-          </Table.HeadCell>
-        </Table.Head>
-        <Table.Body className="divide-y">
-          {listProducts.length > 0 && (
-            listProducts.map(product => (
-              <Table.Row className="bg-white" key={product._id}>
-                <Table.Cell className="float-left">
-                  <MyPhoto src={product.photo} />
-                </Table.Cell>
-                <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
-                  {product.name}
-                </Table.Cell>
-                <Table.Cell>
-                  {product.description}
-                </Table.Cell>
-                <Table.Cell>
-                  {product.coast}
-                </Table.Cell>
-                <Table.Cell>
-                  {product.inventory}
-                </Table.Cell>
-                <Table.Cell className="inline-flex -mt-16">
-                  <a href={'/product/edit/' + product._id} className="font-medium text-blue-600">
-                    <TbEdit className="text-lg" />
-                  </a>
-                  <a href={'/product/delete/' + product._id} className="font-medium text-red-600">
-                    <TbTrash className="text-lg" />
-                  </a>
-                </Table.Cell>
-              </Table.Row>
-            ))
-          )}
-        </Table.Body>
-      </Table>
+      <h2 className="text-2xl font-semibold text-emerald-800 text-center mb-2">Edição de Produto</h2>
+      <form className="flex flex-col gap-4">
+        <div className="flex-auto">
+          <div className="mb-2 block">
+            <Label htmlFor="name" value="Nome" />
+          </div>
+          <TextInput id="name" type="text" placeholder="Nome..." value={product.name} required={true} shadow={true} />
+        </div>
+        <div className="flex gap-4">
+          <div className="flex-auto">
+            <div className="mb-2 block">
+              <Label htmlFor="coast" value="Coins" />
+            </div>
+            <TextInput id="coast" type="number" placeholder="Coins..." value={product.coast} required={true} shadow={true} />
+          </div>
+          <div className="flex-auto">
+            <div className="mb-2 block">
+              <Label htmlFor="inventory" value="Estoque" />
+            </div>
+            <TextInput id="inventory" type="number" placeholder="Estoque..." value={product.inventory} required={true} shadow={true} />
+          </div>
+        </div>
+        <div>
+          <div className="mb-2 block">
+            <Label htmlFor="description" value="Descrição" />
+          </div>
+          <Textarea id="description" placeholder="Descrição..." value={product.description} required={true} rows={3} />
+        </div>
+        <div className="flex gap-4">
+          <MyPhoto src={product.photo} />
+          <FileInput id="file" />
+        </div>
+        <div className="flex gap-4 justify-end">
+          <Button type="submit">
+            Salvar alterações
+          </Button>
+          <Button color="failure">
+            Cencelar
+          </Button>
+        </div>
+      </form>
     </div>
   );
 }

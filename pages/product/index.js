@@ -66,7 +66,7 @@ function Catalog() {
                 <Table.Cell>
                   {product.inventory}
                 </Table.Cell>
-                <Table.Cell className="inline-flex -mt-16">
+                <Table.Cell className="inline-flex -mt-16 gap-2">
                   <a href={'/product/edit/' + product._id} className="font-medium text-blue-600">
                     <TbEdit className="text-lg" />
                   </a>
