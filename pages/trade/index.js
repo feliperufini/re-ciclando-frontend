@@ -11,9 +11,9 @@ const userService = new UserService();
 
 function Home() {
   const [feedstockList, setFeedstockList] = useState([]);
-  const [feedstockItem, setFeedstockItem] = useState([]);
-  const [feedstockAmount, setFeedstockAmount] = useState([]);
-  const [emailUser, setEmailUser] = useState([]);
+  const [feedstockItem, setFeedstockItem] = useState('');
+  const [feedstockAmount, setFeedstockAmount] = useState(0);
+  const [emailUser, setEmailUser] = useState('');
 
   useEffect(() => {
     const getFeedstocks = async () => {
@@ -26,16 +26,34 @@ function Home() {
   const onSubmitTrade = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await userService.getUserByEmail(emailUser);
+      const user = await userService.getUserByEmail(emailUser);
+      user = user.data;
+      const feedstock = await feedstockService.getFeedstockById(feedstockItem);
+      feedstock = feedstock.data;
 
       await tradeService.putTradeCreate({
         feedstockId: feedstockItem,
-        userId: data._id,
+        userId: user._id,
         amount: feedstockAmount
       });
 
-      // creditar as moedas na conta do usuário do email informado
-      // ---------------------------------------------------------
+      const newCoinValue = Math.round(user.coin+(feedstock.coin * (feedstockAmount/100)));
+
+      const bodyUser = new FormData();
+      bodyUser.append("coin", newCoinValue);
+
+      await userService.updateProfile(bodyUser, user._id);
+
+      setEmailUser('');
+      document.getElementById('emailUser').value = '';
+      setFeedstockItem('');
+      document.getElementById('feedstockItem').selectedIndex = 0;
+      setFeedstockAmount(0);
+      document.getElementById('feedstockAmount').value = null;
+
+      if (user._id == localStorage.getItem('id')) {
+        localStorage.setItem('coin', newCoinValue);
+      }
 
       alert('Moedas creditadas com sucesso!');
     } catch (e) {
@@ -50,12 +68,13 @@ function Home() {
       <form onSubmit={onSubmitTrade} className="w-96">
         <div>
           <Label value="E-mail:" />
-          <TextInput type="email" shadow={true} placeholder="email@example.com" required={true} onChange={element => setEmailUser(element.target.value)} />
+          <TextInput type="email" shadow={true} placeholder="email@example.com" required={true} id="emailUser" onChange={element => setEmailUser(element.target.value)} />
         </div>
         <div className="mt-4">
           <div className="absolue">
             <Label value="Matéria Prima:" />
-            <Select required={true} onChange={element => setFeedstockItem(element.target.value)}>
+            <Select required={true} id="feedstockItem" onChange={element => setFeedstockItem(element.target.value)}>
+              <option value={null}>-- Nenhuma --</option>
               {feedstockList.length > 0 && (
                 feedstockList.map(feedstock => (
                   <option key={feedstock._id} value={feedstock._id}>{feedstock.name}</option>
@@ -63,7 +82,7 @@ function Home() {
               )}
             </Select>
             <Label value="Peso:" />
-            <TextInput type="number" shadow={true} placeholder="gramas" required={true} onChange={element => setFeedstockAmount(element.target.value)} />
+            <TextInput type="number" shadow={true} placeholder="gramas" required={true} id="feedstockAmount" onChange={element => setFeedstockAmount(element.target.value)} />
           </div>
         </div>
         <button type="submit" className="block w-24 py-2 mt-4 text-md font-medium text-center rounded-lg text-white transition-colors duration-150 bg-emerald-500 border border-transparent active:bg-emerald-500 hover:bg-emerald-600 focus:outline-none">

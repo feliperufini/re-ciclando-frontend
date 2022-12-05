@@ -24,7 +24,8 @@ function Catalog() {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 grid">
+      <h2 className="text-2xl mb-4 font-semibold text-emerald-800 text-center float-left">Lista de Produtos</h2>
       <Table>
         <Table.Head className="bg-emerald-200">
           <Table.HeadCell>
@@ -51,7 +52,7 @@ function Catalog() {
             listProducts.map(product => (
               <Table.Row className="bg-white" key={product._id}>
                 <Table.Cell className="float-left">
-                  <MyPhoto src={product.photo}/>
+                  <MyPhoto src={product.photo} />
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
                   {product.name}
@@ -66,10 +67,10 @@ function Catalog() {
                   {product.inventory}
                 </Table.Cell>
                 <Table.Cell className="inline-flex -mt-16">
-                  <a href={'/product/edit/'+product._id} className="font-medium text-blue-600">
+                  <a href={'/product/edit/' + product._id} className="font-medium text-blue-600">
                     <TbEdit className="text-lg" />
                   </a>
-                  <a href={'/product/delete/'+product._id} className="font-medium text-red-600">
+                  <a href={'/product/delete/' + product._id} className="font-medium text-red-600">
                     <TbTrash className="text-lg" />
                   </a>
                 </Table.Cell>

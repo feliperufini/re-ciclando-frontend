@@ -29,7 +29,10 @@ export default class UserService extends ReciclandoApiService {
         return this.post('/signup', data);
     }
 
-    async updateProfile(data) {
+    async updateProfile(data, userId) {
+        if (userId) {
+            return this.put(`/user/update?id=`+userId, data);
+        }
         return this.put(`/user/update`, data);
     }
 
