@@ -10,7 +10,6 @@ export default class UserService extends ReciclandoApiService {
         
         const user = await this.get('/user/update');
         localStorage.setItem('id', user.data._id);
-        localStorage.setItem('coin', user.data.coin);
         
         if (user.data.avatar) {
             localStorage.setItem("avatar", user.data.avatar);
@@ -48,24 +47,12 @@ export default class UserService extends ReciclandoApiService {
         return this.get(`/user/search?email=` + email);
     }
 
-    getInfoUserLogged() {
-        return {
-            id: localStorage.getItem('id'),
-            name: localStorage.getItem('name'),
-            email: localStorage.getItem('email'),
-            avatar: localStorage.getItem('avatar')
-        }
-    }
-
     setUserLocalStorage(data) {
         if (data.name) {
             localStorage.setItem("name", data.name);
         }
         if (data.email) {
             localStorage.setItem("email", data.email);
-        }
-        if (data.coin) {
-            localStorage.setItem('coin', data.coin);
         }
         if (data.avatar) {
             localStorage.setItem("avatar", data.avatar);

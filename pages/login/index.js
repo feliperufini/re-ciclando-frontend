@@ -2,12 +2,14 @@ import { useState } from "react";
 import { validateEmail, validatePassword } from "../../utils/validators";
 import Link from "next/link";
 import UserService from "../../services/UserService";
+import { useRouter } from "next/router";
 
 const userService = new UserService();
 
 export default function Login({ afterAuth }) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const router = useRouter();
 
   const validationForm = () => {
     return (
@@ -29,6 +31,7 @@ export default function Login({ afterAuth }) {
       if (afterAuth) {
         afterAuth();
       }
+      router.push('/');
     } catch (e) {
       alert(
         "Erro ao realizar o login: " + e?.response?.data?.error

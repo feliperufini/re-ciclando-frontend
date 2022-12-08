@@ -10,6 +10,6 @@ export default function MyAvatar({ src }) {
     }
 
     return (
-        <Avatar alt="Avatar" img={getAvatar()} rounded={true}/>
+        <Avatar alt="Avatar" img={getAvatar()} rounded={true} />
     );
 }

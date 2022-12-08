@@ -1,7 +1,7 @@
-import { Button, Card, Modal } from "flowbite-react";
+import { Button, Card, Modal, Toast } from "flowbite-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { TbInfoCircle } from "react-icons/tb";
+import { TbCheck, TbInfoCircle } from "react-icons/tb";
 import withAuth from "../../hoc/withAuth";
 import ProductService from "../../services/ProductService";
 import UserService from "../../services/UserService";
@@ -14,7 +14,6 @@ function Catalog() {
   const [modalIsOpen, setModalIsOpen] = useState(false);
   const [itemOpenId, setItemOpenId] = useState('');
   const [userCoin, setUserCoin] = useState([]);
-  const router = useRouter();
 
   useEffect(() => {
     setListProducts([]);
@@ -23,6 +22,14 @@ function Catalog() {
       setListProducts(data);
     };
     getProducts();
+  }, []);
+
+  useEffect(() => {
+    const thisUserCoin = async () => {
+      const user = await userService.getProfile(localStorage.getItem('id'));
+      setUserCoin(user.data.coin);
+    };
+    thisUserCoin();
   }, []);
 
   function handleOpenModal(productId) {
@@ -42,37 +49,18 @@ function Catalog() {
         userId: localStorage.getItem('id'),
         productId: itemOpenId
       });
-      const product = await productService.getProductData(itemOpenId);
       const user = await userService.getProfile(localStorage.getItem('id'));
-      await userService.setUserLocalStorage({ coin: user.data.coin - product.data.coast });
-
+      
+      setUserCoin(user.data.coin);
       setItemOpenId('');
-      router.push('/catalog');
+
+      const { data } = await productService.getProductsListAvailable();
+      setListProducts(data);
+      alert('Compra realizada com sucesso!')
     } catch (error) {
       alert(`Erro ao realizar compra!`);
     }
   }
-
-  const confirmBuy2 = () => {
-    const userId = localStorage.getItem('id');
-    const bodyBuy = {
-      userId: userId,
-      productId: itemOpenId
-    };
-
-    useEffect(() => {
-      const postBuy = async () => {
-        await productService.postProductBuy(bodyBuy);
-      };
-      postBuy();
-    }, []);
-
-    handleCloseModal();
-  }
-
-  useEffect(() => {
-    setUserCoin(localStorage.getItem('coin'));
-  }, []);
 
   return (
     <div className="container p-4 mx-auto grid">

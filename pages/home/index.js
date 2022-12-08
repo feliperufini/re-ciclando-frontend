@@ -1,9 +1,21 @@
 import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
 import withAuth from "../../hoc/withAuth";
+import UserService from "../../services/UserService";
+
+const userService = new UserService();
 
 function Home() {
+  const [userCoin, setUserCoin] = useState([]);
   const router = useRouter();
-  const userCoin = localStorage.getItem('coin');
+
+  useEffect(() => {
+    const thisUserCoin = async () => {
+      const user = await userService.getProfile(localStorage.getItem('id'));
+      setUserCoin(user.data.coin);
+    };
+    thisUserCoin();
+  }, []);
 
   return (
     <div className="container p-4 mx-auto grid ">
@@ -22,7 +34,7 @@ function Home() {
         <button onClick={() => router.push('/tradepoint')} className="my-2 px-5 py-3 w-80 font-medium leading-5 text-white transition-colors duration-150 bg-emerald-600 border border-transparent rounded-full active:bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:shadow-outline-emerald">
           PONTOS DE COLETA PRÓXIMOS
         </button>
-        <button className="my-2 px-5 py-3 w-80 font-medium leading-5 text-white transition-colors duration-150 bg-emerald-600 border border-transparent rounded-full active:bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:shadow-outline-emerald">
+        <button onClick={() => router.push('/tip')} className="my-2 px-5 py-3 w-80 font-medium leading-5 text-white transition-colors duration-150 bg-emerald-600 border border-transparent rounded-full active:bg-emerald-600 hover:bg-emerald-700 focus:outline-none focus:shadow-outline-emerald">
           O QUE PODE SER RECICLADO?
         </button>
       </div>

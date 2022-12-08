@@ -3,10 +3,12 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { TbBellRinging, TbLogout, TbSettings, TbUser } from "react-icons/tb";
 import ProductService from '../../services/ProductService';
+import UserService from '../../services/UserService';
 import ResultSearch from '../ResultSearch';
 import MyAvatar from "../Avatar";
 
 const productService = new ProductService();
+const userService = new UserService();
 
 export default function HeaderNavbar() {
   const [resultSearch, setResultSearch] = useState([]);
@@ -14,7 +16,7 @@ export default function HeaderNavbar() {
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const router = useRouter();
-  
+
   useEffect(() => {
     setUserName(localStorage.getItem('name'));
     setUserEmail(localStorage.getItem('email'));
@@ -40,6 +42,11 @@ export default function HeaderNavbar() {
     setResultSearch([]);
     setTextSearch('');
     router.push(`/product/${id}`);
+  }
+
+  const logout = () => {
+    userService.logout();
+    router.push('/login');
   }
 
   return (
@@ -139,7 +146,7 @@ export default function HeaderNavbar() {
                 <TbSettings className="text-lg mr-2" />
                 <span>Configurações</span>
               </Dropdown.Item>
-              <Dropdown.Item>
+              <Dropdown.Item onClick={logout}>
                 <TbLogout className="text-lg mr-2" />
                 <span>Sair</span>
               </Dropdown.Item>
@@ -147,6 +154,6 @@ export default function HeaderNavbar() {
           </li >
         </ul >
       </div >
-    </header >
+    </header>
   );
 }
