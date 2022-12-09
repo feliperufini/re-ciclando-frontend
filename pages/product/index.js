@@ -3,6 +3,8 @@ import { useEffect, useState } from "react";
 import { TbEdit, TbInfoCircle, TbTrash } from "react-icons/tb";
 import withAuth from "../../hoc/withAuth";
 import ProductService from "../../services/ProductService";
+import photoImg from '../../public/images/photo.png';
+import { useRouter } from "next/router";
 
 const productService = new ProductService();
 
@@ -10,6 +12,7 @@ function Catalog() {
   const [listProducts, setListProducts] = useState([]);
   const [itemOpenId, setItemOpenId] = useState('');
   const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     setListProducts([]);
@@ -48,6 +51,10 @@ function Catalog() {
     }
   }
 
+  function handleCreateNewProduct() {
+    router.push('/product/create')
+  }
+
   return (
     <div className="p-4 grid">
       <div className="flex">
@@ -55,7 +62,7 @@ function Catalog() {
           <h2 className="text-2xl mb-4 font-semibold text-emerald-800 text-center float-left">Lista de Produtos</h2>
         </div>
         <div className="flex-1">
-          <Button className="ml-auto" color="success">Cadastrar</Button>
+          <Button onClick={handleCreateNewProduct} className="ml-auto" color="success">Cadastrar</Button>
         </div>
       </div>
       <Table>
@@ -84,7 +91,7 @@ function Catalog() {
             listProducts.map(product => (
               <Table.Row className="bg-white" key={product._id}>
                 <Table.Cell className="float-left">
-                  <Avatar className="justify-start" alt="Photo" img={product.photo} size="md" status={product.inventory > 0 ? 'online' : 'busy'} statusPosition="bottom-right" />
+                  <Avatar className="justify-start" alt="Photo" img={product.photo ? product.photo : photoImg.src} size="md" status={product.inventory > 0 ? 'online' : 'busy'} statusPosition="bottom-right" />
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
                   {product.name}

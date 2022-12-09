@@ -21,6 +21,10 @@ export default class ProductService extends ReciclandoApiService {
         return this.post('/buy/create', data);
     }
 
+    async postProductCreate(data) {
+        return this.post('/product/create', data);
+    }
+
     async putProductData(data) {
         return this.put('/product/update', data);
     }
