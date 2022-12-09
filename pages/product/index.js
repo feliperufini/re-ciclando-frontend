@@ -1,7 +1,6 @@
-import { Button, Table } from "flowbite-react";
+import { Avatar, Button, Modal, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
-import { TbEdit, TbTrash } from "react-icons/tb";
-import MyPhoto from "../../components/Photo";
+import { TbEdit, TbInfoCircle, TbTrash } from "react-icons/tb";
 import withAuth from "../../hoc/withAuth";
 import ProductService from "../../services/ProductService";
 
@@ -9,6 +8,8 @@ const productService = new ProductService();
 
 function Catalog() {
   const [listProducts, setListProducts] = useState([]);
+  const [itemOpenId, setItemOpenId] = useState('');
+  const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
 
   useEffect(() => {
     setListProducts([]);
@@ -21,6 +22,30 @@ function Catalog() {
 
   if (!listProducts.length) {
     return null;
+  }
+
+  function handleOpenDeleteModal(productId) {
+    setModalDeleteIsOpen(true);
+    setItemOpenId(productId);
+  }
+
+  function handleCloseDeleteModal() {
+    setModalDeleteIsOpen(false);
+    setItemOpenId('');
+  }
+
+  const confirmDeleteProduct = async () => {
+    setModalDeleteIsOpen(false);
+    try {
+      await productService.delProductDelete(itemOpenId);
+      setItemOpenId('');
+
+      const { data } = await productService.getProductsList();
+      setListProducts(data);
+      alert('Produto deletado com sucesso!')
+    } catch (error) {
+      alert(`Erro ao deletar produto!`);
+    }
   }
 
   return (
@@ -59,7 +84,7 @@ function Catalog() {
             listProducts.map(product => (
               <Table.Row className="bg-white" key={product._id}>
                 <Table.Cell className="float-left">
-                  <MyPhoto src={product.photo} />
+                  <Avatar className="justify-start" alt="Photo" img={product.photo} size="md" status={product.inventory > 0 ? 'online' : 'busy'} statusPosition="bottom-right" />
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
                   {product.name}
@@ -77,7 +102,7 @@ function Catalog() {
                   <a href={'/product/edit/' + product._id} className="font-medium text-blue-600">
                     <TbEdit className="text-lg" />
                   </a>
-                  <a href={'/product/delete/' + product._id} className="font-medium text-red-600">
+                  <a onClick={() => handleOpenDeleteModal(product._id)} className="font-medium text-red-600 cursor-pointer">
                     <TbTrash className="text-lg" />
                   </a>
                 </Table.Cell>
@@ -86,6 +111,24 @@ function Catalog() {
           )}
         </Table.Body>
       </Table>
+      <Modal show={modalDeleteIsOpen} size="md">
+          <Modal.Body>
+            <div className="text-center">
+              <TbInfoCircle className="mx-auto mb-2 h-14 w-14 text-gray-400 dark:text-gray-200" />
+              <h3 className="mb-4 text-lg font-normal text-gray-500 dark:text-gray-400">
+                Deseja realmente comprar este item?
+              </h3>
+              <div className="flex justify-center gap-4">
+                <Button color="gray" onClick={confirmDeleteProduct}>
+                  Sim
+                </Button>
+                <Button color="failure" onClick={handleCloseDeleteModal}>
+                  Não
+                </Button>
+              </div>
+            </div>
+          </Modal.Body>
+        </Modal>
     </div>
   );
 }

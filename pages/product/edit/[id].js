@@ -18,15 +18,6 @@ function editProduct() {
   const [inputImage, setInputImage] = useState();
   const router = useRouter();
 
-  // const getProductData = async (idProduct) => {
-  //   try {
-  //     const { data } = await productService.getProductData(idProduct);
-  //     return data;
-  //   } catch (e) {
-  //     alert('Erro ao obter dados do produto!');
-  //   }
-  // }
-
   useEffect(() => {
     return async () => {
       if (!router.query.id) {

@@ -25,4 +25,7 @@ export default class ProductService extends ReciclandoApiService {
         return this.put('/product/update', data);
     }
 
+    async delProductDelete(productId) {
+        return this.delete('/product/delete?productId=' + productId);
+    }
 }

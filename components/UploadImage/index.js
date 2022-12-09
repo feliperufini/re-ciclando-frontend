@@ -1,12 +1,10 @@
 import { Avatar } from "flowbite-react";
 import { useRef, useEffect } from "react";
-import MyPhoto from "../Photo";
 
 export default function UploadImage({
   className = '',
   setImage,
   imagePreview,
-  imagePreviewClassName = '',
   onReferenceSet
 }) {
   const referenceInput = useRef(null);

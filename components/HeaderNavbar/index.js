@@ -1,11 +1,10 @@
-import { Dropdown } from "flowbite-react";
+import { Avatar, Dropdown } from "flowbite-react";
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { TbBellRinging, TbLogout, TbSettings, TbUser } from "react-icons/tb";
 import ProductService from '../../services/ProductService';
 import UserService from '../../services/UserService';
 import ResultSearch from '../ResultSearch';
-import MyAvatar from "../Avatar";
 
 const productService = new ProductService();
 const userService = new UserService();
@@ -15,11 +14,13 @@ export default function HeaderNavbar() {
   const [textSearch, setTextSearch] = useState('');
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
+  const [userAvatar, setUserAvatar] = useState('');
   const router = useRouter();
 
   useEffect(() => {
     setUserName(localStorage.getItem('name'));
     setUserEmail(localStorage.getItem('email'));
+    setUserAvatar(localStorage.getItem('avatar'));
   }, [])
 
   const onSearch = async (e) => {
@@ -126,7 +127,7 @@ export default function HeaderNavbar() {
           </li>
           <li className="relative">
             <Dropdown
-              label={<MyAvatar />}
+              label={<Avatar className="justify-start" alt="Photo" img={userAvatar} rounded={true} size="md" />}
               arrowIcon={false}
               inline={true}
             >
