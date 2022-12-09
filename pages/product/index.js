@@ -1,4 +1,4 @@
-import { Table } from "flowbite-react";
+import { Button, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { TbEdit, TbTrash } from "react-icons/tb";
 import MyPhoto from "../../components/Photo";
@@ -25,7 +25,14 @@ function Catalog() {
 
   return (
     <div className="p-4 grid">
-      <h2 className="text-2xl mb-4 font-semibold text-emerald-800 text-center float-left">Lista de Produtos</h2>
+      <div className="flex">
+        <div className="flex-1">
+          <h2 className="text-2xl mb-4 font-semibold text-emerald-800 text-center float-left">Lista de Produtos</h2>
+        </div>
+        <div className="flex-1">
+          <Button className="ml-auto" color="success">Cadastrar</Button>
+        </div>
+      </div>
       <Table>
         <Table.Head className="bg-emerald-200">
           <Table.HeadCell>

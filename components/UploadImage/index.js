@@ -1,4 +1,6 @@
+import { Avatar } from "flowbite-react";
 import { useRef, useEffect } from "react";
+import MyPhoto from "../Photo";
 
 export default function UploadImage({
   className = '',
@@ -47,11 +49,7 @@ export default function UploadImage({
     >
       {imagePreview && (
         <div className="imagePreviewContainer">
-          <img
-            src={imagePreview}
-            alt="Imagem"
-            className={imagePreviewClassName}
-          />
+          <Avatar className="justify-start" alt="Photo" img={imagePreview} size="lg" />
         </div>
       )}
 

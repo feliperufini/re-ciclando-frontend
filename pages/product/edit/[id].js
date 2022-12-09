@@ -1,7 +1,6 @@
-import { Button, FileInput, Label, Textarea, TextInput } from "flowbite-react";
+import { Button, Label, Textarea, TextInput } from "flowbite-react";
 import { useRouter } from "next/router";
-import { useEffect, useRef, useState } from "react";
-import MyPhoto from "../../../components/Photo";
+import { useEffect, useState } from "react";
 import UploadImage from "../../../components/UploadImage";
 import withAuth from "../../../hoc/withAuth";
 import ProductService from "../../../services/ProductService";
@@ -10,6 +9,7 @@ import photoImg from '../../../public/images/photo.png';
 const productService = new ProductService();
 
 function editProduct() {
+  const [productId, setProductId] = useState('');
   const [productName, setProductName] = useState('');
   const [productCoast, setProductCoast] = useState(0);
   const [productInventory, setProductInventory] = useState(0);
@@ -17,16 +17,15 @@ function editProduct() {
   const [productPhoto, setProductPhoto] = useState();
   const [inputImage, setInputImage] = useState();
   const router = useRouter();
-  const referenceInput = useRef(null);
 
-  const getProductData = async (idProduct) => {
-    try {
-      const { data } = await productService.getProductData(idProduct);
-      return data;
-    } catch (e) {
-      alert('Erro ao obter dados do produto!');
-    }
-  }
+  // const getProductData = async (idProduct) => {
+  //   try {
+  //     const { data } = await productService.getProductData(idProduct);
+  //     return data;
+  //   } catch (e) {
+  //     alert('Erro ao obter dados do produto!');
+  //   }
+  // }
 
   useEffect(() => {
     return async () => {
@@ -34,21 +33,20 @@ function editProduct() {
         return;
       }
 
-      const productData = await getProductData(router.query.id);
-      setProductName(productData.name);
-      setProductCoast(productData.coast);
-      setProductInventory(productData.inventory);
-      setProductDescription(productData.description);
+      const productData = await productService.getProductData(router.query.id);
+      setProductId(productData.data._id);
+      setProductName(productData.data.name);
+      setProductCoast(productData.data.coast);
+      setProductInventory(productData.data.inventory);
+      setProductDescription(productData.data.description);
       setProductPhoto({
-        preview: productData.photo
+        preview: productData.data.photo
       });
     }
-  }, [router.query.id]);
+  }, []);
 
   const updateProduct = async () => {
     try {
-      console.log(productPhoto);
-
       if (productName.length < 3) {
         alert('Nome precisa de pelo menos 3 caracteres!');
         return;
@@ -67,6 +65,7 @@ function editProduct() {
       }
 
       const bodyRequest = new FormData();
+      bodyRequest.append('id', productId);
       bodyRequest.append('name', productName);
       bodyRequest.append('coast', productCoast);
       bodyRequest.append('inventory', productInventory);
@@ -76,32 +75,10 @@ function editProduct() {
         bodyRequest.append('file', productPhoto.file);
       }
 
-      await productService.updateProduct(bodyRequest);
-
+      await productService.putProductData(bodyRequest);
       router.push('/product');
-      alert(`Produto alterado com sucesso!`);
     } catch (error) {
-      alert(`Erro ao editar perfil!`);
-    }
-  }
-
-  const onChangePhoto = () => {
-    if (!referenceInput?.current?.files?.length) {
-      return;
-    }
-
-    const file = referenceInput?.current?.files[0];
-    updatePhotoUrl(file);
-  }
-
-  const updatePhotoUrl = (file) => {
-    const fileReader = new FileReader();
-    fileReader.readAsDataURL(file);
-    fileReader.onloadend = () => {
-      setProductPhoto({
-        preview: fileReader.result,
-        file
-      });
+      alert(`Erro ao editar produto: ` + error);
     }
   }
 
@@ -140,13 +117,11 @@ function editProduct() {
           <Textarea id="description" placeholder="Descrição..." defaultValue={productDescription} required={true} rows={3} onChange={e => setProductDescription(e.target.value)} />
         </div>
         <div className="flex gap-4">
-          <MyPhoto src={productPhoto} onChange={onChangePhoto} />
-          {/* <FileInput id="file" accept="image/*" /> */}
-          <UploadImage setImage={setProductPhoto} imagePreview={productPhoto?.preview || photoImg.src} onReferenceSet={setInputImage} />
-          <span onClick={openFileInput}>selecionar outra foto...</span>
+          <UploadImage setImage={setProductPhoto} imagePreview={productPhoto?.preview || photoImg.src} onReferenceSet={setInputImage} className="cursor-pointer" />
+          <span onClick={openFileInput} className="text-emerald-900 cursor-pointer self-end">Selecionar outra foto...</span>
         </div>
         <div className="flex gap-4 justify-end">
-          <Button type="submit" onClick={updateProduct}>
+          <Button onClick={updateProduct}>
             Salvar alterações
           </Button>
           <Button color="failure">

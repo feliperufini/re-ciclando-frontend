@@ -138,10 +138,12 @@ export default function HeaderNavbar() {
                   {userEmail}
                 </span>
               </Dropdown.Header>
-              <Dropdown.Item>
-                <TbUser className="text-lg mr-2" />
-                <span>Perfil</span>
-              </Dropdown.Item>
+              <a href="/profile">
+                <Dropdown.Item>
+                  <TbUser className="text-lg mr-2" />
+                  <span>Perfil</span>
+                </Dropdown.Item>
+              </a>
               <Dropdown.Item>
                 <TbSettings className="text-lg mr-2" />
                 <span>Configurações</span>
