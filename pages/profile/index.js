@@ -4,11 +4,14 @@ import { useEffect, useState } from "react";
 import UploadImage from "../../components/UploadImage";
 import withAuth from "../../hoc/withAuth";
 import avatarImg from '../../public/images/avatar.png';
+import FeedstockService from "../../services/FeedstockService";
+import TradeService from "../../services/TradeService";
 import UserService from "../../services/UserService";
 import { validateName, validateEmail, validatePassword } from '../../utils/validators';
 
-
 const userService = new UserService();
+const tradeService = new TradeService();
+const feedstockService = new FeedstockService();
 
 function Profile() {
   const [userName, setUserName] = useState('');
@@ -16,6 +19,8 @@ function Profile() {
   const [userPassword, setUserPassword] = useState('');
   const [userAvatar, setUserAvatar] = useState([]);
   const [inputImage, setInputImage] = useState();
+  const [totalTrades] = useState([]);
+  const [lastTrades] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -28,7 +33,51 @@ function Profile() {
       });
     };
     getUser();
+
+    const getTrades = async () => {
+      const { data } = await tradeService.getTradesByUser(localStorage.getItem('id'));
+      for (let i = 0; i < data.length && i < 3; i++) {
+        let feedstock = await feedstockService.getFeedstockById(data[i].feedstockId);
+        lastTrades.push(
+          <div key={data[i]._id}>
+            <p className="font-semibold text-emerald-800">Troca {i + 1} - {formatDate(data[i].date)}</p>
+            <div className="text-start text-emerald-900">
+              <p>Item: {feedstock.data.name}</p>
+              <p>Peso: {data[i].amount}g</p>
+            </div>
+          </div>
+        )
+      }
+    };
+    getTrades();
+
+    const getTotalTrades = async () => {
+      const { data } = await tradeService.getTradesByUser(localStorage.getItem('id'), true);
+      for (let i = 0; i < data.length; i++) {
+        totalTrades.push(
+          <div key={data[i]._id} className="text-start mb-4 text-emerald-900">
+            <p className="font-semibold text-emerald-800">{data[i].feedstock.name}</p>
+            <p>Peso: {data[i].total}g</p>
+            <div className="flex">
+              <p>Coins: {Math.round(data[i].total / data[i].feedstock.coin)}</p>
+              <img aria-hidden="true" className="h-4 w-4 ml-0.5 mt-1" src="images/coin.png" alt="Coin" width={16} />
+            </div>
+          </div>
+        )
+      }
+    };
+    getTotalTrades();
   }, []);
+
+  function formatDate(date) {
+    var d = new Date(date),
+      day = d.getDate().toString(),
+      dayF = (day.length == 1) ? '0' + day : day,
+      month = (d.getMonth() + 1).toString(),
+      monthF = (month.length == 1) ? '0' + month : month,
+      yearF = d.getFullYear();
+    return dayF + "/" + monthF + "/" + yearF;
+  }
 
   const handleUpdateProfile = async () => {
     try {
@@ -52,14 +101,14 @@ function Profile() {
         console.log(userPassword);
         bodyRequest.append('password', userPassword);
       }
-      
+
       if (userAvatar.file) {
         bodyRequest.append('file', userAvatar.file);
       }
 
       await userService.putUpdateProfile(bodyRequest, localStorage.getItem('id'));
       const { data } = await userService.getProfile();
-        
+
       localStorage.setItem('name', userName);
       localStorage.setItem('email', userEmail);
       localStorage.setItem('avatar', data.avatar);
@@ -85,19 +134,31 @@ function Profile() {
       <div className="grid grid-cols-1">
         <div className="flex-none ml-10">
           <Accordion alwaysOpen={true} className="w-3/5 mx-auto bg-emerald-200">
+            <Accordion.Panel hidden />
             <Accordion.Panel className="bg-emerald-100">
               <Accordion.Title className="bg-emerald-100">
-                <Label value="Total já arrecadado..." />
+                <Label value="Total já arrecadado..." className="cursor-pointer" />
               </Accordion.Title>
               <Accordion.Content>
-                <p className="mb-2 text-gray-900">
-                  Flowbite is an open-source library of interactive components built on top of Tailwind CSS including buttons, dropdowns, modals, navbars, and more.
-                </p>
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="w-full text-center">
+                    <span className="font-semibold text-xl text-emerald-700">Total:</span>
+                    {totalTrades.map(
+                      (trade) => trade
+                    )}
+                  </div>
+                  <div className="w-full text-center">
+                    <span className="font-semibold text-xl text-emerald-700">Últimas Trocas:</span>
+                    {lastTrades.map(
+                      (trade) => trade
+                    )}
+                  </div>
+                </div>
               </Accordion.Content>
             </Accordion.Panel>
             <Accordion.Panel className="bg-emerald-100">
               <Accordion.Title className="bg-emerald-100">
-                <Label value="Itens comprados..." />
+                <Label value="Itens comprados..." className="cursor-pointer" />
               </Accordion.Title>
               <Accordion.Content>
                 <p className="mb-2 text-gray-900">
@@ -107,7 +168,7 @@ function Profile() {
             </Accordion.Panel>
             <Accordion.Panel className="bg-emerald-100">
               <Accordion.Title className="bg-emerald-100">
-                <Label value="Editar perfil..." />
+                <Label value="Editar perfil..." className="cursor-pointer" />
               </Accordion.Title>
               <Accordion.Content>
                 <div className="grid grid-cols-2 gap-4">
@@ -135,11 +196,11 @@ function Profile() {
             </Accordion.Panel>
             <Accordion.Panel className="bg-emerald-100">
               <Accordion.Title className="bg-emerald-100">
-                <Label value="Outros..." />
+                <Label value="Outros..." className="cursor-pointer" />
               </Accordion.Title>
               <Accordion.Content>
-                <p className="mb-2 text-gray-900">
-                  The main difference is that the core components from Flowbite are open source under the MIT license, whereas Tailwind UI is a paid product. Another difference is that Flowbite relies on smaller and standalone components, whereas Tailwind UI offers sections of pages.
+                <p className="mb-2 text-emerald-700">
+                  -- Este usuário ainda não possui conquistas adicionadas! --
                 </p>
               </Accordion.Content>
             </Accordion.Panel>

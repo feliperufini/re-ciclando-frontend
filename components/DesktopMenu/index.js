@@ -64,32 +64,32 @@ export default function DesktopMenu() {
               <ul className="p-2 mt-2 space-y-2 overflow-hidden text-sm font-medium text-gray-600 rounded-md shadow-inner bg-emerald-200" aria-label="submenu">
                 <li className="px-2 py-1 transition-colors duration-150 text-emerald-800 hover:text-emerald-900">
                   <div className="inline-flex">
-                  <TbArrowForward className="text-lg mr-1" />
-                  <a className="w-full" href="/user">Usuários</a>
+                    <TbArrowForward className="text-lg mr-1" />
+                    <a className="w-full" href="/trade">Nova Troca</a>
                   </div>
                 </li>
                 <li className="px-2 py-1 transition-colors duration-150 text-emerald-800 hover:text-emerald-900">
                   <div className="inline-flex">
-                  <TbArrowForward className="text-lg mr-1" />
-                  <a className="w-full" href="/product">Produtos</a>
+                    <TbArrowForward className="text-lg mr-1" />
+                    <a className="w-full" href="/product">Produtos</a>
                   </div>
                 </li>
                 <li className="px-2 py-1 transition-colors duration-150 text-emerald-800 hover:text-emerald-900">
                   <div className="inline-flex">
-                  <TbArrowForward className="text-lg mr-1" />
-                  <a className="w-full" href="/tradepoint">Pontos de Troca</a>
+                    <TbArrowForward className="text-lg mr-1" />
+                    <a className="w-full" href="/feedstock">Matéria Prima</a>
                   </div>
                 </li>
                 <li className="px-2 py-1 transition-colors duration-150 text-emerald-800 hover:text-emerald-900">
                   <div className="inline-flex">
-                  <TbArrowForward className="text-lg mr-1" />
-                  <a className="w-full" href="/feedstock">Matéria Prima</a>
+                    <TbArrowForward className="text-lg mr-1" />
+                    <a className="w-full" href="/tradepoint">Pontos de Troca</a>
                   </div>
                 </li>
                 <li className="px-2 py-1 transition-colors duration-150 text-emerald-800 hover:text-emerald-900">
                   <div className="inline-flex">
-                  <TbArrowForward className="text-lg mr-1" />
-                  <a className="w-full" href="/trade">Nova Troca</a>
+                    <TbArrowForward className="text-lg mr-1" />
+                    <a className="w-full" href="/user">Usuários</a>
                   </div>
                 </li>
               </ul>

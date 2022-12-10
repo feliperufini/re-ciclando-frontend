@@ -91,36 +91,12 @@ export default function HeaderNavbar() {
               arrowIcon={false}
               placement="left-start"
             >
-              <Dropdown.Header>
-                <span className="block text-sm font-medium">
-                  Título 1
+              <Dropdown.Header className="w-64">
+                <span className="block text-sm font-medium text-emerald-700">
+                  Bem-Vindo ao Re-Ciclando!
                 </span>
-                <span className="block truncate text-sm">
-                  Mensagem 1 Mensagem 1 Mensagem 1
-                </span>
-              </Dropdown.Header>
-              <Dropdown.Header>
-                <span className="block text-sm font-medium">
-                  Título 2
-                </span>
-                <span className="block truncate text-sm">
-                  Mensagem 2
-                </span>
-              </Dropdown.Header>
-              <Dropdown.Header>
-                <span className="block text-sm font-medium">
-                  Título 3
-                </span>
-                <span className="block truncate text-sm">
-                  Mensagem 3 Mensagem 3
-                </span>
-              </Dropdown.Header>
-              <Dropdown.Header>
-                <span className="block text-sm font-medium">
-                  Título 4
-                </span>
-                <span className="block truncate text-sm">
-                  Mensagem 4 Mensagem 4 Mensagem 4
+                <span className="text-sm text-emerald-900">
+                  Sinta-se a vontade para usar e abusar da enconomia!
                 </span>
               </Dropdown.Header>
             </Dropdown>
@@ -131,7 +107,7 @@ export default function HeaderNavbar() {
               arrowIcon={false}
               inline={true}
             >
-              <Dropdown.Header>
+              <Dropdown.Header className="w-64">
                 <span className="block text-sm">
                   {userName}
                 </span>

@@ -1,13 +1,20 @@
 import { Timeline } from "flowbite-react";
 import { useEffect, useState } from "react";
 import withAuth from "../../hoc/withAuth";
+import UserService from "../../services/UserService";
+
+const userService = new UserService();
 
 function HowTrade() {
   const [userCoin, setUserCoin] = useState([]);
 
   useEffect(() => {
-    setUserCoin(localStorage.getItem('coin'));
-  }, [])
+    const thisUserCoin = async () => {
+      const user = await userService.getProfile(localStorage.getItem('id'));
+      setUserCoin(user.data.coin);
+    };
+    thisUserCoin();
+  }, []);
 
   return (
     <div className="container p-4 mx-auto grid">
