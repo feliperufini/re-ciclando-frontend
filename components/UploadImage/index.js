@@ -3,6 +3,7 @@ import { useRef, useEffect } from "react";
 
 export default function UploadImage({
   className = '',
+  size = 'lg',
   setImage,
   imagePreview,
   onReferenceSet
@@ -47,7 +48,7 @@ export default function UploadImage({
     >
       {imagePreview && (
         <div className="imagePreviewContainer">
-          <Avatar className="justify-start" alt="Photo" img={imagePreview} size="lg" />
+          <Avatar className="justify-start" alt="Photo" img={imagePreview} size={size} />
         </div>
       )}
 

@@ -1,10 +1,10 @@
 import { Button, Card, Modal, Toast } from "flowbite-react";
-import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
-import { TbCheck, TbInfoCircle } from "react-icons/tb";
+import { TbInfoCircle } from "react-icons/tb";
 import withAuth from "../../hoc/withAuth";
 import ProductService from "../../services/ProductService";
 import UserService from "../../services/UserService";
+import photoImg from '../../public/images/photo.png';
 
 const productService = new ProductService();
 const userService = new UserService();
@@ -75,7 +75,7 @@ function Catalog() {
         {listProducts.length > 0 && (
           listProducts.map(product => (
             <div className="max-w-sm p-1" key={product._id}>
-              <Card imgAlt="Imagem do Produto" imgSrc={product.photo}>
+              <Card imgAlt="Imagem do Produto" imgSrc={product.photo ? product.photo : photoImg.src}>
                 <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">
                   {product.name}
                 </h5>

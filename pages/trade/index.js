@@ -42,7 +42,7 @@ function Home() {
       const bodyUser = new FormData();
       bodyUser.append("coin", newCoinValue);
 
-      await userService.updateProfile(bodyUser, user._id);
+      await userService.putUpdateProfile(bodyUser, user._id);
 
       setEmailUser('');
       document.getElementById('emailUser').value = '';
