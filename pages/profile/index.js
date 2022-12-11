@@ -1,4 +1,4 @@
-import { Accordion, Avatar, Button, Label, TextInput } from "flowbite-react";
+import { Accordion, Avatar, Button, Label, Table, TextInput } from "flowbite-react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import UploadImage from "../../components/UploadImage";
@@ -7,11 +7,16 @@ import avatarImg from '../../public/images/avatar.png';
 import FeedstockService from "../../services/FeedstockService";
 import TradeService from "../../services/TradeService";
 import UserService from "../../services/UserService";
+import BuyService from "../../services/BuyService";
+import ProductService from "../../services/ProductService";
 import { validateName, validateEmail, validatePassword } from '../../utils/validators';
+import photoImg from '../../public/images/photo.png';
 
 const userService = new UserService();
 const tradeService = new TradeService();
 const feedstockService = new FeedstockService();
+const buyService = new BuyService();
+const productService = new ProductService();
 
 function Profile() {
   const [userName, setUserName] = useState('');
@@ -19,6 +24,7 @@ function Profile() {
   const [userPassword, setUserPassword] = useState('');
   const [userAvatar, setUserAvatar] = useState([]);
   const [inputImage, setInputImage] = useState();
+  const [listBuys, setListBuys] = useState([]);
   const [totalTrades] = useState([]);
   const [lastTrades] = useState([]);
   const router = useRouter();
@@ -40,7 +46,7 @@ function Profile() {
         let feedstock = await feedstockService.getFeedstockById(data[i].feedstockId);
         lastTrades.push(
           <div key={data[i]._id}>
-            <p className="font-semibold text-emerald-800">Troca {i + 1} - {formatDate(data[i].date)}</p>
+            <p className="font-semibold text-emerald-800">Troca - {formatDate(data[i].date)}</p>
             <div className="text-start text-emerald-900">
               <p>Item: {feedstock.data.name}</p>
               <p>Peso: {data[i].amount}g</p>
@@ -59,7 +65,7 @@ function Profile() {
             <p className="font-semibold text-emerald-800">{data[i].feedstock.name}</p>
             <p>Peso: {data[i].total}g</p>
             <div className="flex">
-              <p>Coins: {Math.round(data[i].total / data[i].feedstock.coin)}</p>
+              <p>Coins: {Math.round((data[i].total / 1000) * data[i].feedstock.coin)}</p>
               <img aria-hidden="true" className="h-4 w-4 ml-0.5 mt-1" src="images/coin.png" alt="Coin" width={16} />
             </div>
           </div>
@@ -67,6 +73,30 @@ function Profile() {
       }
     };
     getTotalTrades();
+
+    const getListBuys = async () => {
+      const buys = await buyService.getBuyByUser(localStorage.getItem('id'));
+      buys = buys.data;
+      const products = await productService.getProductsList();
+      products = products.data;
+
+      let finalBuys = [];
+      buys.forEach(buy => {
+        products.forEach(product => {
+          if (product._id == buy.productId) {
+            finalBuys.push({
+              'photo': product.photo,
+              'name': product.name,
+              'coin': buy.coin,
+              'deliver': buy.deliver,
+              'date': formatDate(buy.date)
+            });
+          }
+        });
+      });
+      setListBuys(finalBuys);
+    };
+    getListBuys();
   }, []);
 
   function formatDate(date) {
@@ -158,12 +188,31 @@ function Profile() {
             </Accordion.Panel>
             <Accordion.Panel className="bg-emerald-100">
               <Accordion.Title className="bg-emerald-100">
-                <Label value="Itens comprados..." className="cursor-pointer" />
+                <Label value="Ultimas compras..." className="cursor-pointer" />
               </Accordion.Title>
               <Accordion.Content>
-                <p className="mb-2 text-gray-900">
-                  Flowbite is first conceptualized and designed using the Figma software so everything you see in the library has a design equivalent in our Figma file.
-                </p>
+                <Table>
+                  <Table.Body className="divide-y">
+                    {listBuys.length > 0 && (
+                      listBuys.map(buy => (
+                        <Table.Row className="bg-white" key={buy._id}>
+                          <Table.Cell className="float-left">
+                            <Avatar className="justify-start" alt="Photo" img={buy.photo ? buy.photo : photoImg.src} size="md" status={buy.deliver == true ? 'online' : 'busy'} statusPosition="bottom-right" />
+                          </Table.Cell>
+                          <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
+                            {buy.name}
+                          </Table.Cell>
+                          <Table.Cell>
+                            {buy.coin}
+                          </Table.Cell>
+                          <Table.Cell>
+                            {buy.date}
+                          </Table.Cell>
+                        </Table.Row>
+                      ))
+                    )}
+                  </Table.Body>
+                </Table>
               </Accordion.Content>
             </Accordion.Panel>
             <Accordion.Panel className="bg-emerald-100">
@@ -200,7 +249,7 @@ function Profile() {
               </Accordion.Title>
               <Accordion.Content>
                 <p className="mb-2 text-emerald-700">
-                  -- Este usuário ainda não possui conquistas adicionadas! --
+                  -- Este usuário ainda não possui conquistas! --
                 </p>
               </Accordion.Content>
             </Accordion.Panel>

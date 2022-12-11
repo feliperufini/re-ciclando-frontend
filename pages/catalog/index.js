@@ -2,12 +2,14 @@ import { Button, Card, Modal, Toast } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { TbInfoCircle } from "react-icons/tb";
 import withAuth from "../../hoc/withAuth";
+import BuyService from "../../services/BuyService";
 import ProductService from "../../services/ProductService";
 import UserService from "../../services/UserService";
 import photoImg from '../../public/images/photo.png';
 
 const productService = new ProductService();
 const userService = new UserService();
+const buyService = new BuyService();
 
 function Catalog() {
   const [listProducts, setListProducts] = useState([]);
@@ -45,7 +47,7 @@ function Catalog() {
   const confirmBuy = async () => {
     setModalIsOpen(false);
     try {
-      await productService.postProductBuy({
+      await buyService.postProductBuy({
         userId: localStorage.getItem('id'),
         productId: itemOpenId
       });

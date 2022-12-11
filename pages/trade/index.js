@@ -1,4 +1,4 @@
-import { Card, Label, Select, TextInput } from "flowbite-react";
+import { Label, Select, TextInput } from "flowbite-react";
 import React, { useEffect, useState } from "react";
 import withAuth from "../../hoc/withAuth";
 import TradeService from "../../services/TradeService";
@@ -31,18 +31,20 @@ function Home() {
       const feedstock = await feedstockService.getFeedstockById(feedstockItem);
       feedstock = feedstock.data;
 
-      await tradeService.putTradeCreate({
+      const coinAmount = 
+      await tradeService.postTradeCreate({
         feedstockId: feedstockItem,
         userId: user._id,
         amount: feedstockAmount
       });
 
-      const newCoinValue = Math.round(user.coin+(feedstock.coin * (feedstockAmount/100)));
+      const newCoinValue = Math.round(user.coin + (feedstock.coin * (feedstockAmount / 1000)));
 
       const bodyUser = new FormData();
       bodyUser.append("coin", newCoinValue);
 
       await userService.putUpdateProfile(bodyUser, user._id);
+      await feedstockService.putFeedstockUpdate({inventory: feedstock.inventory + parseInt(feedstockAmount)}, feedstock._id);
 
       setEmailUser('');
       document.getElementById('emailUser').value = '';
@@ -51,11 +53,7 @@ function Home() {
       setFeedstockAmount(0);
       document.getElementById('feedstockAmount').value = null;
 
-      if (user._id == localStorage.getItem('id')) {
-        localStorage.setItem('coin', newCoinValue);
-      }
-
-      alert('Moedas creditadas com sucesso!');
+      alert(feedstock.coin * (feedstockAmount / 1000) + ' moedas foram creditadas com sucesso!');
     } catch (e) {
       alert(
         "Erro ao realizar troca: " + e?.response?.data?.error
@@ -85,9 +83,11 @@ function Home() {
             <TextInput type="number" shadow={true} placeholder="gramas" required={true} id="feedstockAmount" onChange={element => setFeedstockAmount(element.target.value)} />
           </div>
         </div>
-        <button type="submit" className="block w-24 py-2 mt-4 text-md font-medium text-center rounded-lg text-white transition-colors duration-150 bg-emerald-500 border border-transparent active:bg-emerald-500 hover:bg-emerald-600 focus:outline-none">
-          Confirmar
-        </button>
+        <div className="mt-4">
+          <button type="submit" className="block py-1.5 px-2 ml-auto text-md font-medium rounded-lg text-white transition-colors duration-150 bg-emerald-500 border border-transparent active:bg-emerald-500 hover:bg-emerald-600 focus:outline-none">
+            Confirmar
+          </button>
+        </div>
       </form>
 
     </div>

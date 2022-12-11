@@ -8,4 +8,8 @@ export default class FeedstockService extends ReciclandoApiService {
     async getFeedstockById(feedstockId) {
         return this.get(`/feedstock/search?id=` + feedstockId);
     }
+
+    async putFeedstockUpdate(data, feedstockId) {
+        return this.put(`/feedstock/update?id=` + feedstockId, data);
+    }
 }
