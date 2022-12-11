@@ -2,34 +2,34 @@ import { Avatar, Button, Modal, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { TbEdit, TbInfoCircle, TbTrash } from "react-icons/tb";
 import withAuth from "../../hoc/withAuth";
-import ProductService from "../../services/ProductService";
-import photoImg from '../../public/images/photo.png';
+import UserService from "../../services/UserService";
+import avatarImg from '../../public/images/avatar.png';
 import { useRouter } from "next/router";
 
-const productService = new ProductService();
+const userService = new UserService();
 
 function Catalog() {
-  const [listProducts, setListProducts] = useState([]);
+  const [listUsers, setListUsers] = useState([]);
   const [itemOpenId, setItemOpenId] = useState('');
   const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
-    setListProducts([]);
-    const getProducts = async () => {
-      const { data } = await productService.getProductsList();
-      setListProducts(data);
+    setListUsers([]);
+    const getUsers = async () => {
+      const { data } = await userService.getSystemUsers();
+      setListUsers(data);
     };
-    getProducts();
+    getUsers();
   }, []);
 
-  if (!listProducts.length) {
+  if (!listUsers.length) {
     return null;
   }
 
-  function handleOpenDeleteModal(productId) {
+  function handleOpenDeleteModal(userId) {
     setModalDeleteIsOpen(true);
-    setItemOpenId(productId);
+    setItemOpenId(userId);
   }
 
   function handleCloseDeleteModal() {
@@ -37,32 +37,33 @@ function Catalog() {
     setItemOpenId('');
   }
 
-  const confirmDeleteProduct = async () => {
+  const confirmDeleteUser = async () => {
     setModalDeleteIsOpen(false);
     try {
-      await productService.delProductDelete(itemOpenId);
+      // apenas reduzir o nível do usuário, não apagar ele do sistema
+      await userService.delUserDelete(itemOpenId);
       setItemOpenId('');
 
-      const { data } = await productService.getProductsList();
-      setListProducts(data);
-      alert('Produto deletado com sucesso!')
+      const { data } = await userService.getSystemUsers();
+      setListUsers(data);
+      alert('Usuário deletado com sucesso!')
     } catch (error) {
-      alert(`Erro ao deletar produto!`);
+      alert(`Erro ao deletar usuário!`);
     }
   }
 
-  function handleCreateNewProduct() {
-    router.push('/product/create')
+  function handleCreateNewUser() {
+    router.push('/user/create')
   }
 
   return (
     <div className="p-4 grid">
       <div className="flex">
         <div className="flex-1">
-          <h2 className="text-2xl mb-4 font-semibold text-emerald-800 text-center float-left">Lista de Produtos</h2>
+          <h2 className="text-2xl mb-4 font-semibold text-emerald-800 text-center float-left">Lista de Usuários</h2>
         </div>
         <div className="flex-1">
-          <Button onClick={handleCreateNewProduct} className="ml-auto" color="success">Cadastrar</Button>
+          <Button onClick={handleCreateNewUser} className="ml-auto" color="success">Cadastrar</Button>
         </div>
       </div>
       <Table>
@@ -74,42 +75,36 @@ function Catalog() {
             Nome
           </Table.HeadCell>
           <Table.HeadCell>
-            Descrição
+            E-mail
           </Table.HeadCell>
           <Table.HeadCell>
-            Preço
-          </Table.HeadCell>
-          <Table.HeadCell>
-            Estoque
+            Nível
           </Table.HeadCell>
           <Table.HeadCell>
             Ações
           </Table.HeadCell>
         </Table.Head>
         <Table.Body className="divide-y">
-          {listProducts.length > 0 && (
-            listProducts.map(product => (
-              <Table.Row className="bg-white" key={product._id}>
+          {listUsers.length > 0 && (
+            listUsers.map(user => (
+              <Table.Row className="bg-white" key={user._id}>
                 <Table.Cell className="float-left">
-                  <Avatar className="justify-start" alt="Photo" img={product.photo ? product.photo : photoImg.src} size="md" status={product.inventory > 0 ? 'online' : 'busy'} statusPosition="bottom-right" />
+                  <Avatar className="justify-start" alt="Photo" img={user.avatar ? user.avatar : avatarImg.src} size="md" />
                 </Table.Cell>
                 <Table.Cell className="whitespace-nowrap font-medium text-gray-900">
-                  {product.name}
+                  {user.name}
                 </Table.Cell>
                 <Table.Cell>
-                  {product.description}
+                  {user.email}
                 </Table.Cell>
                 <Table.Cell>
-                  {product.coast}
-                </Table.Cell>
-                <Table.Cell>
-                  {product.inventory}
+                  {user.level}
                 </Table.Cell>
                 <Table.Cell className="inline-flex -mt-16 gap-2">
-                  <a href={'/product/edit/' + product._id} className="font-medium text-blue-600">
+                  <a href={'/user/edit/' + user._id} className="font-medium text-blue-600">
                     <TbEdit className="text-lg" />
                   </a>
-                  <a onClick={() => handleOpenDeleteModal(product._id)} className="font-medium text-red-600 cursor-pointer">
+                  <a onClick={() => handleOpenDeleteModal(user._id)} className="font-medium text-red-600 cursor-pointer">
                     <TbTrash className="text-lg" />
                   </a>
                 </Table.Cell>
@@ -123,10 +118,10 @@ function Catalog() {
             <div className="text-center">
               <TbInfoCircle className="mx-auto mb-2 h-14 w-14 text-gray-400 dark:text-gray-200" />
               <h3 className="mb-4 text-lg font-normal text-gray-500 dark:text-gray-400">
-                Deseja realmente comprar este item?
+                Deseja realmente excluir este item?
               </h3>
               <div className="flex justify-center gap-4">
-                <Button color="gray" onClick={confirmDeleteProduct}>
+                <Button color="gray" onClick={confirmDeleteUser}>
                   Sim
                 </Button>
                 <Button color="failure" onClick={handleCloseDeleteModal}>

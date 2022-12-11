@@ -43,6 +43,10 @@ export default class UserService extends ReciclandoApiService {
     async getUserByEmail(email) {
         return this.get(`/user/search?email=` + email);
     }
+    
+    async getSystemUsers() {
+        return this.get('/user/system');
+    }
 
     setUserLocalStorage(data) {
         if (data.name) {
