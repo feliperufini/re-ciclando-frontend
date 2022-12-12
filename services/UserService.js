@@ -60,6 +60,10 @@ export default class UserService extends ReciclandoApiService {
         return this.get('/user/system');
     }
 
+    async getUsersList() {
+        return this.get('/user/list');
+    }
+
     setUserLocalStorage(data) {
         if (data.name) {
             localStorage.setItem("name", data.name);

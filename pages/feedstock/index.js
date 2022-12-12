@@ -1,4 +1,4 @@
-import { Avatar, Button, Modal, Table } from "flowbite-react";
+import { Button, Modal, Table } from "flowbite-react";
 import { useEffect, useState } from "react";
 import { TbEdit, TbInfoCircle, TbTrash } from "react-icons/tb";
 import withAuth from "../../hoc/withAuth";

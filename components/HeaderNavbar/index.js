@@ -42,7 +42,7 @@ export default function HeaderNavbar() {
   const onClickResultSearch = (id) => {
     setResultSearch([]);
     setTextSearch('');
-    router.push(`/product/${id}`);
+    router.push('/catalog');
   }
 
   const logout = () => {
