@@ -32,12 +32,16 @@ export default class UserService extends ReciclandoApiService {
         return this.post('/user/create', data);
     }
 
+    async getUpdateProfile(userId) {
+        return this.get('/user/updatesystem?id=' + userId);
+    }
+
     async putUpdateProfile(data, userId) {
         return this.put('/user/update?id=' + userId, data);
     }
-
-    async getUpdateProfile(userId) {
-        return this.get('/user/updatesystem?id=' + userId);
+    
+    async delUserDelete(userId) {
+        return this.put('/user/delete?id=' + userId);
     }
 
     isAuthenticated() {

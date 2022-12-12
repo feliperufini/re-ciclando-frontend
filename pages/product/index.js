@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 
 const productService = new ProductService();
 
-function Catalog() {
+function ProductList() {
   const [listProducts, setListProducts] = useState([]);
   const [itemOpenId, setItemOpenId] = useState('');
   const [modalDeleteIsOpen, setModalDeleteIsOpen] = useState(false);
@@ -140,4 +140,4 @@ function Catalog() {
   );
 }
 
-export default withAuth(Catalog);
+export default withAuth(ProductList);

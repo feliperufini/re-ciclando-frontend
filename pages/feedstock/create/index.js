@@ -9,7 +9,7 @@ import { validateEmail } from "../../../utils/validators";
 
 const userService = new UserService();
 
-function UserCreate() {
+function FeedstockCreate() {
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
@@ -102,4 +102,4 @@ function UserCreate() {
   );
 }
 
-export default withAuth(UserCreate);
+export default withAuth(FeedstockCreate);

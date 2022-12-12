@@ -8,7 +8,7 @@ import UploadImage from "../../../components/UploadImage";
 
 const productService = new ProductService();
 
-function Catalog() {
+function ProductCreate() {
   const [productName, setProductName] = useState('');
   const [productCoast, setProductCoast] = useState(0);
   const [productInventory, setProductInventory] = useState(0);
@@ -101,4 +101,4 @@ function Catalog() {
   );
 }
 
-export default withAuth(Catalog);
+export default withAuth(ProductCreate);

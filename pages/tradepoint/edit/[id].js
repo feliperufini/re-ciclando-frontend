@@ -1,15 +1,16 @@
 import { Button, Label, Textarea, TextInput } from "flowbite-react";
-import { useState } from "react";
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import UploadImage from "../../../components/UploadImage";
 import withAuth from "../../../hoc/withAuth";
 import UserService from "../../../services/UserService";
-import photoImg from '../../../public/images/photo.png';
-import { useRouter } from "next/router";
-import UploadImage from "../../../components/UploadImage";
+import avatarImg from '../../../public/images/avatar.png';
 import { validateEmail } from "../../../utils/validators";
 
 const userService = new UserService();
 
-function UserCreate() {
+function editUser() {
+  const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
   const [userEmail, setUserEmail] = useState('');
   const [userPassword, setUserPassword] = useState('');
@@ -18,7 +19,24 @@ function UserCreate() {
   const [inputImage, setInputImage] = useState();
   const router = useRouter();
 
-  const handleCreateNewUser = async () => {
+  useEffect(() => {
+    return async () => {
+      if (!router.query.id) {
+        return;
+      }
+
+      const userData = await userService.getUpdateProfile(router.query.id);
+      setUserId(userData.data._id);
+      setUserName(userData.data.name);
+      setUserEmail(userData.data.email);
+      setUserLevel(userData.data.level);
+      setUserAvatar({
+        preview: userData.data.avatar
+      });
+    }
+  }, []);
+
+  const handleUpdateUser = async () => {
     try {
       if (userName.length < 3) {
         alert('Nome precisa de pelo menos 3 caracteres!');
@@ -28,7 +46,7 @@ function UserCreate() {
         alert('E-mail informado é inválido!');
         return;
       }
-      if (userPassword.length < 6) {
+      if (userPassword && userPassword.length < 6) {
         alert('A senha deve possuir no mínimo 6 caracteres!');
         return;
       }
@@ -40,18 +58,20 @@ function UserCreate() {
       const bodyRequest = new FormData();
       bodyRequest.append('name', userName);
       bodyRequest.append('email', userEmail);
-      bodyRequest.append('password', userPassword);
       bodyRequest.append('level', userLevel);
 
+      if (userPassword.length >= 6) {
+        bodyRequest.append('password', userPassword);
+      }
       if (userAvatar.file) {
         bodyRequest.append('file', userAvatar.file);
       }
 
-      await userService.postUserCreate(bodyRequest);
+      await userService.putUpdateProfile(bodyRequest, userId);
       router.push('/user');
-      alert('Usuário cadastrado com sucesso!');
+      alert('Usuário alterado com sucesso!');
     } catch (error) {
-      alert(`Erro ao cadastrar usuário: ` + error);
+      alert('Erro ao editar usuário: ' + error);
     }
   }
 
@@ -59,7 +79,7 @@ function UserCreate() {
     inputImage?.click();
   }
 
-  function handleCancelCreateUser() {
+  function handleCancelUpdateUser() {
     router.push('/user')
   }
 
@@ -67,39 +87,39 @@ function UserCreate() {
     <div className="p-4 grid">
       <div className="flex mb-4">
         <div className="flex-1">
-          <h2 className="text-2xl font-semibold text-emerald-800 text-center float-left">Cadastrar Usuário</h2>
+          <h2 className="text-2xl font-semibold text-emerald-800 text-center float-left">Editar Usuário</h2>
         </div>
       </div>
       <form className="grid grid-cols-3 gap-4 mb-4">
         <div>
           <Label htmlFor="name" value="Nome" />
-          <TextInput id="name" type="text" placeholder="Nome..." required={true} onChange={e => setUserName(e.target.value)} />
+          <TextInput id="name" type="text" placeholder="Nome..." defaultValue={userName} required={true} shadow={true} onChange={e => setUserName(e.target.value)} />
           <div className="flex gap-2 mt-2">
-            <UploadImage setImage={setUserAvatar} imagePreview={userAvatar?.preview || photoImg.src} onReferenceSet={setInputImage} className="cursor-pointer" />
+            <UploadImage setImage={setUserAvatar} imagePreview={userAvatar?.preview || avatarImg.src} onReferenceSet={setInputImage} className="cursor-pointer" />
             <span onClick={openFileInput} className="text-emerald-900 cursor-pointer self-end">Selecionar outra foto...</span>
           </div>
         </div>
         <div>
           <Label htmlFor="email" value="E-mail" />
-          <TextInput id="email" type="email" placeholder="E-mail..." required={true} onChange={e => setUserEmail(e.target.value)} />
+          <TextInput id="email" type="email" placeholder="E-mail..." defaultValue={userEmail} required={true} shadow={true} onChange={e => setUserEmail(e.target.value)} />
         </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
             <Label htmlFor="password" value="Senha" />
-            <TextInput id="password" type="password" required={true} onChange={e => setUserPassword(e.target.value)} />
+            <TextInput id="password" type="password" shadow={true} onChange={e => setUserPassword(e.target.value)} />
           </div>
           <div>
             <Label htmlFor="level" value="Nível" />
-            <TextInput id="level" type="number" required={true} onChange={e => setUserLevel(e.target.value)} min={2} max={3} />
+            <TextInput id="level" type="number" value={userLevel} required={true} shadow={true} onChange={e => setUserLevel(e.target.value)} min={2} max={3} />
           </div>
         </div>
       </form>
-      <div className="flex gap-2 ml-auto">
-        <Button onClick={handleCreateNewUser}>Cadastrar</Button>
-        <Button onClick={handleCancelCreateUser} color="failure">Cancelar</Button>
+      <div className="flex gap-4 ml-auto">
+        <Button onClick={handleUpdateUser}>Salvar alterações</Button>
+        <Button onClick={handleCancelUpdateUser} color="failure">Cencelar</Button>
       </div>
     </div>
   );
 }
 
-export default withAuth(UserCreate);
+export default withAuth(editUser);
