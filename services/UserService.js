@@ -3,14 +3,14 @@ import ReciclandoApiService from "./ReciclandoApiService";
 export default class UserService extends ReciclandoApiService {
     async login(credentials) {
         const { data } = await this.post('/login', credentials);
-        
+
         localStorage.setItem("name", data.name);
         localStorage.setItem("email", data.email);
         localStorage.setItem("token", data.token);
-        
+
         const user = await this.get('/user/update');
         localStorage.setItem('id', user.data._id);
-        
+
         if (user.data.avatar) {
             localStorage.setItem("avatar", user.data.avatar);
         }
@@ -28,8 +28,16 @@ export default class UserService extends ReciclandoApiService {
         return this.post('/signup', data);
     }
 
+    async postUserCreate(data) {
+        return this.post('/user/create', data);
+    }
+
     async putUpdateProfile(data, userId) {
-        return this.put(`/user/update?id=`+userId, data);
+        return this.put('/user/update?id=' + userId, data);
+    }
+
+    async getUpdateProfile(userId) {
+        return this.get('/user/updatesystem?id=' + userId);
     }
 
     isAuthenticated() {
@@ -37,13 +45,13 @@ export default class UserService extends ReciclandoApiService {
     }
 
     async getProfile() {
-        return this.get(`/user/update`);
+        return this.get('/user/update');
     }
 
     async getUserByEmail(email) {
-        return this.get(`/user/search?email=` + email);
+        return this.get('/user/search?email=' + email);
     }
-    
+
     async getSystemUsers() {
         return this.get('/user/system');
     }

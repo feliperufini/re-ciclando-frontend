@@ -85,7 +85,7 @@ function editProduct() {
     <div className="p-4 grid">
       <div className="flex mb-4">
         <div className="flex-1">
-          <h2 className="text-2xl font-semibold text-emerald-800 text-center float-left">Cadastrar Produto</h2>
+          <h2 className="text-2xl font-semibold text-emerald-800 text-center float-left">Editar Produto</h2>
         </div>
       </div>
       <form className="grid grid-cols-3 gap-4 mb-4">

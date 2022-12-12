@@ -4,16 +4,17 @@ import { useEffect, useState } from "react";
 import UploadImage from "../../../components/UploadImage";
 import withAuth from "../../../hoc/withAuth";
 import UserService from "../../../services/UserService";
-import photoImg from '../../../public/images/photo.png';
+import avatarImg from '../../../public/images/avatar.png';
+import { validateEmail } from "../../../utils/validators";
 
 const userService = new UserService();
 
 function editUser() {
   const [userId, setUserId] = useState('');
   const [userName, setUserName] = useState('');
-  const [userEmail, setUserEmail] = useState(0);
-  const [userPassword, setUserPassword] = useState(0);
-  const [userLevel, setUserLevel] = useState('');
+  const [userEmail, setUserEmail] = useState('');
+  const [userPassword, setUserPassword] = useState('');
+  const [userLevel, setUserLevel] = useState(0);
   const [userAvatar, setUserAvatar] = useState([]);
   const [inputImage, setInputImage] = useState();
   const router = useRouter();
@@ -24,14 +25,13 @@ function editUser() {
         return;
       }
 
-      const userData = await userService.getUserData(router.query.id);
+      const userData = await userService.getUpdateProfile(router.query.id);
       setUserId(userData.data._id);
       setUserName(userData.data.name);
-      setUserCoast(userData.data.coast);
-      setUserInventory(userData.data.inventory);
-      setUserDescription(userData.data.description);
-      setUserPhoto({
-        preview: userData.data.photo
+      setUserEmail(userData.data.email);
+      setUserLevel(userData.data.level);
+      setUserAvatar({
+        preview: userData.data.avatar
       });
     }
   }, []);
@@ -42,34 +42,36 @@ function editUser() {
         alert('Nome precisa de pelo menos 3 caracteres!');
         return;
       }
-      if (userEmail < 0) {
-        alert('Você não pode cadastrar um preço negativo!');
+      if (!validateEmail(userEmail)) {
+        alert('E-mail informado é inválido!');
         return;
       }
-      if (userPassword < 0) {
-        alert('Você não pode cadastrar um estoque negativo!');
+      if (userPassword && userPassword.length < 6) {
+        alert('A senha deve possuir no mínimo 6 caracteres!');
         return;
       }
-      if (userLevel.length < 3) {
-        alert('Descrição precisa de pelo menos 3 caracteres!');
+      if (userLevel > 3 || userLevel < 2) {
+        alert('O nível informado para o usuário é inválido!');
         return;
       }
 
       const bodyRequest = new FormData();
-      bodyRequest.append('id', userId);
       bodyRequest.append('name', userName);
-      bodyRequest.append('coast', userEmail);
-      bodyRequest.append('inventory', userPassword);
-      bodyRequest.append('description', userLevel);
+      bodyRequest.append('email', userEmail);
+      bodyRequest.append('level', userLevel);
 
+      if (userPassword.length >= 6) {
+        bodyRequest.append('password', userPassword);
+      }
       if (userAvatar.file) {
         bodyRequest.append('file', userAvatar.file);
       }
 
-      await userService.putUserData(bodyRequest);
+      await userService.putUpdateProfile(bodyRequest, userId);
       router.push('/user');
+      alert('Usuário alterado com sucesso!');
     } catch (error) {
-      alert(`Erro ao editar produto: ` + error);
+      alert('Erro ao editar usuário: ' + error);
     }
   }
 
@@ -85,7 +87,7 @@ function editUser() {
     <div className="p-4 grid">
       <div className="flex mb-4">
         <div className="flex-1">
-          <h2 className="text-2xl font-semibold text-emerald-800 text-center float-left">Cadastrar Produto</h2>
+          <h2 className="text-2xl font-semibold text-emerald-800 text-center float-left">Editar Usuário</h2>
         </div>
       </div>
       <form className="grid grid-cols-3 gap-4 mb-4">
@@ -93,23 +95,23 @@ function editUser() {
           <Label htmlFor="name" value="Nome" />
           <TextInput id="name" type="text" placeholder="Nome..." defaultValue={userName} required={true} shadow={true} onChange={e => setUserName(e.target.value)} />
           <div className="flex gap-2 mt-2">
-            <UploadImage setImage={setUserPhoto} imagePreview={userAvatar?.preview || photoImg.src} onReferenceSet={setInputImage} className="cursor-pointer" />
+            <UploadImage setImage={setUserAvatar} imagePreview={userAvatar?.preview || avatarImg.src} onReferenceSet={setInputImage} className="cursor-pointer" />
             <span onClick={openFileInput} className="text-emerald-900 cursor-pointer self-end">Selecionar outra foto...</span>
           </div>
         </div>
+        <div>
+          <Label htmlFor="email" value="E-mail" />
+          <TextInput id="email" type="email" placeholder="E-mail..." defaultValue={userEmail} required={true} shadow={true} onChange={e => setUserEmail(e.target.value)} />
+        </div>
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="coast" value="Coins" />
-            <TextInput id="coast" type="number" placeholder="Coins..." defaultValue={userEmail} required={true} shadow={true} onChange={e => setUserCoast(e.target.value)} />
+            <Label htmlFor="password" value="Senha" />
+            <TextInput id="password" type="password" shadow={true} onChange={e => setUserPassword(e.target.value)} />
           </div>
           <div>
-            <Label htmlFor="inventory" value="Estoque" />
-            <TextInput id="inventory" type="number" placeholder="Estoque..." defaultValue={userPassword} required={true} shadow={true} onChange={e => setUserInventory(e.target.value)} />
+            <Label htmlFor="level" value="Nível" />
+            <TextInput id="level" type="number" value={userLevel} required={true} shadow={true} onChange={e => setUserLevel(e.target.value)} min={2} max={3} />
           </div>
-        </div>
-        <div>
-          <Label htmlFor="description" value="Descrição" />
-          <Textarea id="description" placeholder="Descrição..." defaultValue={userLevel} required={true} rows={3} onChange={e => setUserDescription(e.target.value)} />
         </div>
       </form>
       <div className="flex gap-4 ml-auto">

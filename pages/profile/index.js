@@ -25,8 +25,9 @@ function Profile() {
   const [userAvatar, setUserAvatar] = useState([]);
   const [inputImage, setInputImage] = useState();
   const [listBuys, setListBuys] = useState([]);
-  const [totalTrades] = useState([]);
-  const [lastTrades] = useState([]);
+  const [totalTrades, setTotalTrades] = useState([]);
+  const [lastTrades, setLastTrades] = useState([]);
+  const [allFeedstocks, setAllFeedstocks] = useState([]);
   const router = useRouter();
 
   useEffect(() => {
@@ -41,19 +42,25 @@ function Profile() {
     getUser();
 
     const getTrades = async () => {
-      const { data } = await tradeService.getTradesByUser(localStorage.getItem('id'));
-      for (let i = 0; i < data.length && i < 3; i++) {
-        let feedstock = await feedstockService.getFeedstockById(data[i].feedstockId);
-        lastTrades.push(
-          <div key={data[i]._id}>
-            <p className="font-semibold text-emerald-800">Troca - {formatDate(data[i].date)}</p>
-            <div className="text-start text-emerald-900">
-              <p>Item: {feedstock.data.name}</p>
-              <p>Peso: {data[i].amount}g</p>
-            </div>
-          </div>
-        )
-      }
+      const tradesByUser = await tradeService.getTradesByUser(localStorage.getItem('id'));
+      tradesByUser = tradesByUser.data;
+      const FeedstocksList = await feedstockService.getFeedstocksList();
+      FeedstocksList = FeedstocksList.data;
+
+      let lastTrades = [];
+      tradesByUser.forEach(trade => {
+        FeedstocksList.forEach(feedstock => {
+          if (feedstock._id == trade.feedstockId) {
+            lastTrades.push({
+              '_id': trade._id,
+              'name': feedstock.name,
+              'amount': trade.amount,
+              'date': formatDate(trade.date)
+            });
+          }
+        });
+      });
+      setLastTrades(lastTrades);
     };
     getTrades();
 
@@ -179,8 +186,16 @@ function Profile() {
                   </div>
                   <div className="w-full text-center">
                     <span className="font-semibold text-xl text-emerald-700">Últimas Trocas:</span>
-                    {lastTrades.map(
-                      (trade) => trade
+                    {lastTrades.length > 0 && (
+                      lastTrades.map(trade => (
+                        <div key={trade._id}>
+                          <p className="font-semibold text-emerald-800">Troca - {trade.date}</p>
+                          <div className="text-start text-emerald-900">
+                            <p>Item: {trade.name}</p>
+                            <p>Peso: {trade.amount}g</p>
+                          </div>
+                        </div>
+                      ))
                     )}
                   </div>
                 </div>
