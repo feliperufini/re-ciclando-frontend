@@ -30,6 +30,7 @@ function Home() {
                 <p>
                   {tradepoint.address}
                 </p>
+                <a href="https://goo.gl/maps/Y9Vzz9NTuvg82AuVA" target="_blank" className="text-blue-500 text-right">Ir para</a>
               </Card>
             </div>
           ))
